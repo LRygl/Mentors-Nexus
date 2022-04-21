@@ -1,0 +1,273 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{nameref}
+\usepackage[top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+\usepackage{lastpage}
+\usepackage{glossaries}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{capt-of}% or use the larger `caption` package
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{plantuml}
+\usepackage{xstring}
+\usepackage{catchfile}
+\usepackage{color, colortbl}
+\usepackage{import}
+\usepackage{listings}
+\usepackage{seqsplit}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{anyfontsize}
+\usepackage{sectsty}
+\usepackage{rest-api}
+
+%_SET_GRAPHICS_PATH
+\graphicspath{ {./Images/} }
+
+%_IMPORT_CONFIGURATION_AND_STYLES
+\import{Configuration/}{imports.sty}
+\import{Configuration/}{configuration.sty}
+
+
+\newenvironment{ChangeToA3Paper}{%
+\newlength\oldtextwidth
+\oldtextwidth=\the\textwidth
+\newpage
+\pageaiii % Change page to A3: 297mm x 420mm
+\setlength{\pdfpagewidth}{\paperwidth} % Change the pdf page
+\setlength{\pdfpageheight}{\paperheight} % Change the pdf height
+\setlength{\textwidth}{\the\paperwidth-\the\spinemargin-\the\foremargin} % Change the textwidth
+\begin{adjustwidth}{0cm}{-87mm} % Enlarge the right margin by: 297 - 210 = 87mm
+}
+{
+\end{adjustwidth}
+\newpage
+\pageaiv % Change page to A4: 210mm x 297mm
+\setlength{\pdfpagewidth}{\paperwidth} % Change the pdf page
+\setlength{\pdfpageheight}{\paperheight} % Change the pdf height
+\textwidth=\the\oldtextwidth
+}
+
+
+\begin{document}
+    \import{Cover/}{CoverPage.tex}
+    \tableofcontents
+    \listoffigures
+    \listoftables
+    \lstlistoflistings
+\newpage
+   
+
+\section{Version Control}
+\begin{small}
+    \begin{longtable}[h]{|L{3cm}|L{2cm}|L{3cm}|L{4cm}|} 
+        \hline
+        \rowcolor{Gray}
+        Version&Date&User&Change Note\\
+        \hline
+        \endhead% header material
+        ver1.0.0-3cbac7&14.03.2022&Lubomír Rýgl&Initial version\\        \hline
+        &&&\\        \hline
+        &&&\\        \hline        
+        &&&\\        \hline
+        &&&\\        \hline   
+        &&&\\        \hline
+        &&&\\        \hline   
+        &&&\\        \hline
+        &&&\\        \hline   
+        &&&\\        \hline
+        &&&\\        \hline   
+        &&&\\        \hline
+        &&&\\        \hline   
+        &&&\\        \hline
+        &&&\\        \hline   
+        &&&\\        \hline
+        &&&\\        \hline   
+        \caption{Document version history}
+    \end{longtable}
+\end{small}
+
+\section{Application Overview}
+Mentors Nexus is a software web application used by Mentors.cz to provide its users access to educational materials online. The application back-end is running on Java 18 with SpringBoot Framework and the front-end will be a Angular application. For more detail about the availabilty and architacture - please see the documentation Architecture Overview. The following sections describe the actions that can be taken by users interfacing with the application.
+\subsection[short]{Application}
+
+USER ACTION
+\begin{itemize}
+    \itemsep 0em 
+    \item Register Account 
+    \item Log-In to Account
+    \item Update User
+    \item Delete User
+    \item Subscribe to Course
+    \item Purchase Course
+    \item Watch Lesson
+    \item Finish Lesson
+    \item Finish Course    
+\end{itemize}
+
+COURSE ACTION
+\begin{itemize}
+    \itemsep 0em 
+    \item Create Course
+    \item Edit Course
+    \item Delete Course
+\end{itemize}
+
+LESSON ACTION
+\begin{itemize}
+    \itemsep 0em 
+    \item Create Lesson
+    \item Edit Lesson
+    \item Delete Lesson
+    \item Assign Lesson to Course
+\end{itemize}
+
+LEARNING PATH ACTION
+\begin{itemize}
+    \itemsep 0em 
+    \item Create Learingn PATH
+    \item Edit Learingn PATH
+    \item Delete Learning Path
+    \item Assign Course to Learning Path
+\end{itemize}
+
+
+\section{Architecture Overview}
+\subsection{General Architecture}
+
+\subsection{AWS Architecture}
+Application shall be build as a three tier application leveraging AWS
+
+\subsection{Endpoint Overview}
+List of endpoints exposed to the frontend application available for request processing
+
+\begin{lstlisting}[language=Java, caption=Backend Application base path]
+        https://mentors.cz/api/v01/
+\end{lstlisting}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|L{2cm}|L{2cm}|L{6cm}|L{6cm}|}
+        \hline
+        \rowcolor{Gray}
+        Allowed Method&Type&Endpoint&Description \\ \hline
+        %CONTENT%
+        \rowcolor{ApiBlue}
+        GET&PUBLIC&/public-status&Shows application status \\ \hline
+
+        \rowcolor{ApiBlue}
+        GET&PROTECTED&/status&Shows application status \\ \hline
+        \rowcolor{ApiBlue}
+        GET&PUBLIC&/user/resetPassword&Reset user password \\ \hline
+s
+        \rowcolor{ApiGreen}
+        POST&PUBLIC&/user/register&Register a new user  \\ \hline
+        \rowcolor{ApiGreen}
+        POST&PUBLIC&/user/ľogin&Log-In an existing user \\ \hline
+        \rowcolor{ApiGreen}
+        POST&PROTECTED&/user/add&Add new user manually - requires a administrator permissions to perform this acction. Endpoint is not publicly accessible  \\ \hline
+        \rowcolor{ApiGreen}
+        POST&PUBLIC&/user/register&Register a new user  \\ \hline
+
+    \end{tabular}
+    \caption{List of available endpoints}
+\end{table}
+
+
+
+
+
+
+
+
+
+\section{Endpoint Definitions}
+%https://github.com/MusApfel/latex-describe-rest-api
+\begin{apiRoute}{get}{/api/v01/user/find/\{id\}}{Get user record by user Id}
+	
+	\begin{routeParameter}
+		\routeParamItem{id}{id of storage}
+	\end{routeParameter}
+	\begin{routeResponse}{application/json}
+		\begin{routeResponseItem}{200}{ok}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+	"name" : "Apfelmus",
+	"count" : 25
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+		\begin{routeResponseItem}{404}{error: storage not found}
+			\begin{routeResponseItemBody}
+{
+	"message": "storage with id '11' not found!"
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+	\end{routeResponse}
+	
+\end{apiRoute}
+
+
+
+\begin{apiRoute}{post}{/api/storage/}{create a new storage}
+	\begin{routeParameter}
+		\noRouteParameter{no parameter}
+	\end{routeParameter}
+	\begin{routeRequest}{application/json}
+		\begin{routeRequestBody}
+{
+	"name" : "Apfelmus",
+	"count" : 25
+}
+		\end{routeRequestBody}
+	\end{routeRequest}
+	\begin{routeResponse}{application/json}
+		\begin{routeResponseItem}{200}{ok}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+	"name" : "Apfelmus",
+	"count" : 25
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+	\end{routeResponse}
+\end{apiRoute}
+
+
+
+\section{Database Design}
+
+
+\begin{lstlisting}[language=Java, caption=Format XML for MAC calculation example]
+        
+    /**
+    * Returns part of XML string from which MAC should be generated.
+    * param xml XML String
+    * param macElementName XML element name from which the MAC should be generated
+    */
+   fun getXmlPartForMacVerification(xml: String, macElementName: String): String {
+       val macStartElement = "<$macElementName>"
+       val macEndElement = "</$macElementName>"
+       if (xml.contains(macStartElement) && xml.contains(macEndElement)) {
+           val macData = xml.substring(
+               xml.indexOf(macStartElement),
+               xml.indexOf(macEndElement) + macElementName.length + TAG_OFFSET
+           )
+           val macString = macData.replace(">[\\s]*<".toRegex(), "><")
+           log.debug("MAC string length: {}", macString.length)
+           return macString
+       } else {
+           throw ParsingErrorException("Missing element $macElementName for MAC.")
+       }
+   }
+\end{lstlisting}
+
+
+\end{document}

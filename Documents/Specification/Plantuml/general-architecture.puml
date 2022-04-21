@@ -1,0 +1,51 @@
+@startuml NiPC Architecture
+'IMPORTS
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!$ICONURL = "https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/v2.4.0"
+!include $ICONURL/common.puml
+!include $ICONURL/font-awesome-5/angular.puml
+!include $ICONURL/devicons2/spring.puml
+!include $ICONURL/devicons2/postgresql.puml
+'!$COLOR_BACKGROUD_1 = "#bbbbbb"
+'!$COLOR_BACKGROUD_2 = "#999999"
+'!$COLOR_BACKGROUD_3 = "#555555"
+
+'!$COLOR_AEVI_ACCENT = "#e51b27"
+'!$COLOR_WHITE = "#FFFFFF"
+
+'!$COLOR_REL_LINE = "#000000"
+'!$COLOR_REL_TEXT = "#000000"
+
+'UpdateElementStyle("system", $bgColor=$COLOR_BACKGROUD_1, $fontColor=$COLOR_WHITE, $borderColor=$COLOR_WHITE)
+'UpdateElementStyle("component", $bgColor=$COLOR_BACKGROUD_3, $fontColor=$COLOR_WHITE, $borderColor=$COLOR_WHITE)
+'UpdateElementStyle("container", $bgColor=$COLOR_BACKGROUD_2, $fontColor=$COLOR_WHITE, $borderColor=$COLOR_WHITE)
+'UpdateElementStyle("external_system", $bgColor=$COLOR_BACKGROUD_2, $fontColor=$COLOR_WHITE, $borderColor=$COLOR_WHITE)
+
+'UpdateRelStyle($lineColor=$COLOR_REL_LINE, $textColor=$COLOR_REL_TEXT)
+
+
+'CONFIGURATION
+LAYOUT_LEFT_RIGHT()
+LAYOUT_WITH_LEGEND()
+
+title MENTORS NEXUS \n""Architecture Overview""
+
+Person_Ext(customer,"Customer","Person interacting with the web application via the Angular Front-End application")
+
+System_Boundary(mentorsFrontend, "Mentors Front-End") {
+    Container(frontend,"Angular 13","NGINX","Front-End application generating the customer facing visuals",angular)
+}
+
+System_Boundary(mentorsBackend, "Mentors Back-End") {
+    Container(customerBackend,"Customer API","SpringBoot, Java 11","SpringBoot application responsible for request processing and content delivery",spring)
+    ContainerDb(db,"Database","PostgreSQL 14.2","Holds Customer,Course,Lesson and Invoice information",postgresql)
+
+    BiRel(customer,frontend,"Request","HTTPS","Port 4200")
+    BiRel(frontend,customerBackend,"API Request","HTTPS","Port 8080")
+    BiRel(customerBackend,db,"Read/Write","SQL","Port 443")
+
+}
+
+SHOW_LEGEND()
+@enduml

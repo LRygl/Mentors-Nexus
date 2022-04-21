@@ -1,0 +1,108 @@
+\begin{titlepage}
+    \pagestyle{empty}
+
+    \begin{tikzpicture}[overlay,remember picture]
+
+        % Background color
+        \fill[
+        black!2]
+        (current page.south west) rectangle (current page.north east);
+        
+        % Rectangles
+        \shade[
+        left color=red, 
+        right color=red!40,
+        transform canvas ={rotate around ={45:($(current page.north west)+(0,-6)$)}}] 
+        ($(current page.north west)+(0,-6)$) rectangle ++(9,1.5);
+        
+        \shade[
+        left color=lightgray,
+        right color=lightgray!50,
+        rounded corners=0.75cm,
+        transform canvas ={rotate around ={45:($(current page.north west)+(.5,-10)$)}}]
+        ($(current page.north west)+(0.5,-10)$) rectangle ++(15,1.5);
+        
+        \shade[
+        left color=lightgray,
+        rounded corners=0.3cm,
+        transform canvas ={rotate around ={45:($(current page.north west)+(.5,-10)$)}}] ($(current page.north west)+(1.5,-9.55)$) rectangle ++(7,.6);
+        
+        \shade[
+        left color=red!80,
+        right color=red!60,
+        rounded corners=0.4cm,
+        transform canvas ={rotate around ={45:($(current page.north)+(-1.5,-3)$)}}]
+        ($(current page.north)+(-1.5,-3)$) rectangle ++(9,0.8);
+        
+        \shade[
+        left color=red!80,
+        right color=red!80,
+        rounded corners=0.9cm,
+        transform canvas ={rotate around ={45:($(current page.north)+(-3,-8)$)}}] ($(current page.north)+(-3,-8)$) rectangle ++(15,1.8);
+        
+        \shade[
+        left color=red,
+        right color=red,
+        rounded corners=0.9cm,
+        transform canvas ={rotate around ={45:($(current page.north west)+(4,-15.5)$)}}]
+        ($(current page.north west)+(4,-15.5)$) rectangle ++(30,1.8);
+        
+        \shade[
+        left color=red,
+        right color=red,
+        rounded corners=0.75cm,
+        transform canvas ={rotate around ={45:($(current page.north west)+(13,-10)$)}}]
+        ($(current page.north west)+(13,-10)$) rectangle ++(15,1.5);
+        
+        \shade[
+        left color=lightgray,
+        rounded corners=0.3cm,
+        transform canvas ={rotate around ={45:($(current page.north west)+(18,-8)$)}}]
+        ($(current page.north west)+(18,-8)$) rectangle ++(15,0.6);
+        
+        \shade[
+        left color=lightgray,
+        rounded corners=0.4cm,
+        transform canvas ={rotate around ={45:($(current page.north west)+(19,-5.65)$)}}]
+        ($(current page.north west)+(19,-5.65)$) rectangle ++(15,0.8);
+        
+        \shade[
+        left color=red,
+        right color=red!80,
+        rounded corners=0.6cm,
+        transform canvas ={rotate around ={45:($(current page.north west)+(20,-9)$)}}] 
+        ($(current page.north west)+(20,-9)$) rectangle ++(14,1.2);
+        
+        % Year
+        \draw[ultra thick,gray]
+        ($(current page.center)+(5,2)$) -- ++(0,-3cm) 
+        node[
+        midway,
+        left=0.25cm,
+        text width=15cm,
+        align=right,
+        black!75
+        ]
+        {
+        {\fontsize{25}{30} \selectfont \bf TECHNICAL \\[10pt] SPECIFICATION}
+        } 
+        node[
+        midway,
+        right=0.25cm,
+        text width=10cm,
+        align=left,
+        red]
+        {
+        {\fontsize{72}{86.4} \selectfont 2022}
+        };
+        
+        % Title
+        \node[align=center] at ($(current page.center)+(0,-5)$) 
+        {
+        {\fontsize{30}{42} \selectfont {{ \bf Mentors Nexus Application}}} \\[6pt]
+        {\fontsize{15}{22} \selectfont \textcolor{gray}{{ WEB APPLICATION FOR CONTENT DELIVERY}}} \\[1cm]
+        {\fontsize{16}{19.2} \selectfont \textcolor{red}{ \bf Lubomír Rýgl}}\\[3pt]
+        Mentors s.r.o.\\[3pt]
+        Address};
+        \end{tikzpicture}
+\end{titlepage}
