@@ -95,10 +95,15 @@
 Mentors Nexus is a software web application used by Mentors.cz to provide its users access to educational materials online. The application back-end is running on Java 18 with SpringBoot Framework and the front-end will be a Angular application. For more detail about the availabilty and architacture - please see the documentation Architecture Overview. The following sections describe the actions that can be taken by users interfacing with the application.
 \subsection[short]{Application}
 
+User
+Course
+Lesson
+Path
+
 USER ACTION
 \begin{itemize}
     \itemsep 0em 
-    \item Register Account 
+    \item Register Account - Allow user to register a new account with an email address
     \item Log-In to Account
     \item Update User
     \item Delete User
@@ -138,9 +143,15 @@ LEARNING PATH ACTION
 
 \section{Architecture Overview}
 \subsection{General Architecture}
+asa
+\subsubsection{Customer}
+\subsubsection{Front-End}
+\subsubsection{Back-End}
+\subsubsection{Database}
+
 
 \subsection{AWS Architecture}
-Application shall be build as a three tier application leveraging AWS
+Application shall be build as a three tier application leveraging AWS Routing and Auto-Scalig groups. Whole solution is designed as HA.
 
 \subsection{Endpoint Overview}
 List of endpoints exposed to the frontend application available for request processing
