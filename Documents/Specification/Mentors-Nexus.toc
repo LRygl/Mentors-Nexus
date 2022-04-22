@@ -1,0 +1,13 @@
+\contentsline {section}{\numberline {1}Version Control}{5}{section.1}%
+\contentsline {section}{\numberline {2}Application Overview}{6}{section.2}%
+\contentsline {subsection}{\numberline {2.1}short}{6}{subsection.2.1}%
+\contentsline {section}{\numberline {3}Architecture Overview}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}General Architecture}{7}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Customer}{7}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Front-End}{7}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Back-End}{7}{subsubsection.3.1.3}%
+\contentsline {subsubsection}{\numberline {3.1.4}Database}{7}{subsubsection.3.1.4}%
+\contentsline {subsection}{\numberline {3.2}AWS Architecture}{7}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Endpoint Overview}{7}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Endpoint Definitions}{8}{section.4}%
+\contentsline {section}{\numberline {5}Database Design}{9}{section.5}%
