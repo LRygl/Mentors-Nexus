@@ -32,25 +32,6 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String userFirstName, String lastName, String username, String userPassword, String userEmail, String userCompany, String userProfileImageUrl, String userRole, String[] userAuthorities, Date userLastLoginDate, Date userLastLoginDateDisplay, Date userJoinDate, Date userLastUpdatedDate, Boolean isActive, Boolean isNotLocked) {
-        this.id = id;
-        this.userFirstName = userFirstName;
-        this.userLastName = lastName;
-        this.username = username;
-        this.userPassword = userPassword;
-        this.userEmail = userEmail;
-        this.userCompany = userCompany;
-        this.userProfileImageUrl = userProfileImageUrl;
-        this.userRole = userRole;
-        this.userAuthorities = userAuthorities;
-        this.userLastLoginDate = userLastLoginDate;
-        this.userLastLoginDateDisplay = userLastLoginDateDisplay;
-        this.userJoinDate = userJoinDate;
-        this.userLastUpdatedDate = userLastUpdatedDate;
-        this.isActive = isActive;
-        this.isNotLocked = isNotLocked;
-    }
-
     public Long getId() {
         return id;
     }
@@ -63,16 +44,16 @@ public class User {
         return userFirstName;
     }
 
-    public void setUserFirstName(String firstName) {
-        this.userFirstName = firstName;
+    public void setUserFirstName(String userFirstName) {
+        this.userFirstName = userFirstName;
     }
 
     public String getUserLastName() {
         return userLastName;
     }
 
-    public void setUserLastName(String lastName) {
-        this.userLastName = lastName;
+    public void setUserLastName(String userLastName) {
+        this.userLastName = userLastName;
     }
 
     public String getUsername() {
@@ -87,80 +68,80 @@ public class User {
         return userPassword;
     }
 
-    public void setUserPassword(String password) {
-        this.userPassword = password;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
     public String getUserEmail() {
         return userEmail;
     }
 
-    public void setUserEmail(String email) {
-        this.userEmail = email;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public String getUserCompany() {
         return userCompany;
     }
 
-    public void setUserCompany(String company) {
-        this.userCompany = company;
+    public void setUserCompany(String userCompany) {
+        this.userCompany = userCompany;
     }
 
     public String getUserProfileImageUrl() {
         return userProfileImageUrl;
     }
 
-    public void setUserProfileImageUrl(String profileImageUrl) {
-        this.userProfileImageUrl = profileImageUrl;
+    public void setUserProfileImageUrl(String userProfileImageUrl) {
+        this.userProfileImageUrl = userProfileImageUrl;
     }
 
     public String getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(String role) {
-        this.userRole = role;
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
     }
 
     public String[] getUserAuthorities() {
         return userAuthorities;
     }
 
-    public void setUserAuthorities(String[] authorities) {
-        this.userAuthorities = authorities;
+    public void setUserAuthorities(String[] userAuthorities) {
+        this.userAuthorities = userAuthorities;
     }
 
     public Date getUserLastLoginDate() {
         return userLastLoginDate;
     }
 
-    public void setUserLastLoginDate(Date lastLoginDate) {
-        this.userLastLoginDate = lastLoginDate;
+    public void setUserLastLoginDate(Date userLastLoginDate) {
+        this.userLastLoginDate = userLastLoginDate;
     }
 
     public Date getUserLastLoginDateDisplay() {
         return userLastLoginDateDisplay;
     }
 
-    public void setUserLastLoginDateDisplay(Date lastLoginDateDisplay) {
-        this.userLastLoginDateDisplay = lastLoginDateDisplay;
+    public void setUserLastLoginDateDisplay(Date userLastLoginDateDisplay) {
+        this.userLastLoginDateDisplay = userLastLoginDateDisplay;
     }
 
     public Date getUserJoinDate() {
         return userJoinDate;
     }
 
-    public void setUserJoinDate(Date joinDate) {
-        this.userJoinDate = joinDate;
+    public void setUserJoinDate(Date userJoinDate) {
+        this.userJoinDate = userJoinDate;
     }
 
     public Date getUserLastUpdatedDate() {
         return userLastUpdatedDate;
     }
 
-    public void setUserLastUpdatedDate(Date updatedDate) {
-        this.userLastUpdatedDate = updatedDate;
+    public void setUserLastUpdatedDate(Date userLastUpdatedDate) {
+        this.userLastUpdatedDate = userLastUpdatedDate;
     }
 
     public Boolean getActive() {
@@ -179,25 +160,22 @@ public class User {
         isNotLocked = notLocked;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + userFirstName + '\'' +
-                ", lastName='" + userLastName + '\'' +
-                ", userName='" + username + '\'' +
-                ", password='" + userPassword + '\'' +
-                ", email='" + userEmail + '\'' +
-                ", company='" + userCompany + '\'' +
-                ", profileImageUrl='" + userProfileImageUrl + '\'' +
-                ", role='" + userRole + '\'' +
-                ", authorities=" + Arrays.toString(userAuthorities) +
-                ", lastLoginDate=" + userLastLoginDate +
-                ", lastLoginDateDisplay=" + userLastLoginDateDisplay +
-                ", joinDate=" + userJoinDate +
-                ", updatedDate=" + userLastUpdatedDate +
-                ", isActive=" + isActive +
-                ", isNotLocked=" + isNotLocked +
-                '}';
+    public User(Long id, String userFirstName, String userLastName, String username, String userPassword, String userEmail, String userCompany, String userProfileImageUrl, String userRole, String[] userAuthorities, Date userLastLoginDate, Date userLastLoginDateDisplay, Date userJoinDate, Date userLastUpdatedDate, Boolean isActive, Boolean isNotLocked) {
+        this.id = id;
+        this.userFirstName = userFirstName;
+        this.userLastName = userLastName;
+        this.username = username;
+        this.userPassword = userPassword;
+        this.userEmail = userEmail;
+        this.userCompany = userCompany;
+        this.userProfileImageUrl = userProfileImageUrl;
+        this.userRole = userRole;
+        this.userAuthorities = userAuthorities;
+        this.userLastLoginDate = userLastLoginDate;
+        this.userLastLoginDateDisplay = userLastLoginDateDisplay;
+        this.userJoinDate = userJoinDate;
+        this.userLastUpdatedDate = userLastUpdatedDate;
+        this.isActive = isActive;
+        this.isNotLocked = isNotLocked;
     }
 }
