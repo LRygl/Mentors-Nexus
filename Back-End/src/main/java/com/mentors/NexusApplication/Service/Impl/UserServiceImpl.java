@@ -25,7 +25,7 @@ import static com.mentors.NexusApplication.Constants.UserImplementationConstant.
 @Service
 @Qualifier("UserDetailService")
 public class UserServiceImpl implements UserService {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private UserRepository userRepository;
 
     @Autowired

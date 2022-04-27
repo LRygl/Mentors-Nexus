@@ -21,4 +21,5 @@ public class HttpResponse {
     private String httpStatusMessage;
     private String httpDeveloperMessage;
     private Map<?,?> httpResponseData;
+
 }
