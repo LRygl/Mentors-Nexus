@@ -33,6 +33,19 @@
 \import{Configuration/}{configuration.sty}
 
 
+\definecolor{getLightBlue}{HTML}{ECF6FF}
+\definecolor{getLightGreen}{HTML}{EBF7F4}
+\definecolor{getLightOrange}{HTML}{FEF4EB}
+\definecolor{getLightRed}{HTML}{FBEEEE}
+
+
+
+
+\newcommand{\GET}{getLightBlue}
+\newcommand{\POST}{getLightGreen}
+\newcommand{\PUT}{getLightOrange}
+\newcommand{\DELETE}{getLightRed}
+
 \newenvironment{ChangeToA3Paper}{%
 \newlength\oldtextwidth
 \oldtextwidth=\the\textwidth
@@ -145,10 +158,13 @@ LEARNING PATH ACTION
 \subsection{General Architecture}
 asa
 \subsubsection{Customer}
-\subsubsection{Front-End}
-\subsubsection{Back-End}
-\subsubsection{Database}
-
+Basic user with its information and priviledges
+\subsubsection{Course}
+Course consists of lessons
+\subsubsection{Lesson}
+Actual lesson with its content
+\subsubsection{Course-Category}
+Each course has a category assigned
 
 \subsection{AWS Architecture}
 Application shall be build as a three tier application leveraging AWS Routing and Auto-Scalig groups. Whole solution is designed as HA.
@@ -162,27 +178,46 @@ List of endpoints exposed to the frontend application available for request proc
 
 \begin{table}[ht]
     \centering
-    \begin{tabular}{|L{2cm}|L{2cm}|L{6cm}|L{6cm}|}
+    \begin{tabular}{|L{2cm}|L{2cm}|L{2cm}|L{4cm}|L{6cm}|}
         \hline
         \rowcolor{Gray}
-        Allowed Method&Type&Endpoint&Description \\ \hline
+        Category&Allowed Method&Type&Endpoint&Description \\ \hline
         %CONTENT%
-        \rowcolor{ApiBlue}
-        GET&PUBLIC&/public-status&Shows application status \\ \hline
+        \rowcolor{\GET}
+        User&GET&PUBLIC&/public-status&Shows application status \\ \hline
+        \rowcolor{\POST}
+        User&POST&PUBLIC&/user/resetPassword&Reset user password \\ \hline
+        \rowcolor{\PUT}
+        User&PUT&PROTECTED&/user/update&Register a new user  \\ \hline
+        \rowcolor{\DELETE}
+        User&DELETE&PROTECTED&/user/delete&Register a new user  \\ \hline
 
-        \rowcolor{ApiBlue}
-        GET&PROTECTED&/status&Shows application status \\ \hline
-        \rowcolor{ApiBlue}
-        GET&PUBLIC&/user/resetPassword&Reset user password \\ \hline
+        \rowcolor{\GET}
+        Category&GET&PUBLIC&/public-status&Shows application status \\ \hline
+        \rowcolor{\POST}
+        Category&GPOSTET&PUBLIC&/user/resetPassword&Reset user password \\ \hline
+        \rowcolor{\PUT}
+        Category&PUT&PROTECTED&/user/update&Register a new user  \\ \hline
+        \rowcolor{\DELETE}
+        Category&DELETE&PROTECTED&/user/delete&Register a new user  \\ \hline
 
-        \rowcolor{ApiGreen}
-        POST&PUBLIC&/user/register&Register a new user  \\ \hline
-        \rowcolor{ApiGreen}
-        POST&PUBLIC&/user/ľogin&Log-In an existing user \\ \hline
-        \rowcolor{ApiGreen}
-        POST&PROTECTED&/user/add&Add new user manually - requires a administrator permissions to perform this acction. Endpoint is not publicly accessible  \\ \hline
-        \rowcolor{ApiGreen}
-        POST&PUBLIC&/user/register&Register a new user  \\ \hline
+        \rowcolor{\GET}
+        Course&GET&PUBLIC&/public-status&Shows application status \\ \hline
+        \rowcolor{\POST}
+        Course&POST&PUBLIC&/user/resetPassword&Reset user password \\ \hline
+        \rowcolor{\PUT}
+        Course&PUT&PROTECTED&/user/update&Register a new user  \\ \hline
+        \rowcolor{\DELETE}
+        Course&DELETE&PROTECTED&/user/delete&Register a new user  \\ \hline
+
+        \rowcolor{\GET}
+        Lesson&GET&PUBLIC&/public-status&Shows application status \\ \hline
+        \rowcolor{\POST}
+        Lesson&POST&PUBLIC&/user/resetPassword&Reset user password \\ \hline
+        \rowcolor{\PUT}
+        Lesson&PUT&PROTECTED&/user/update&Register a new user  \\ \hline
+        \rowcolor{\DELETE}
+        Lesson&DELETE&PROTECTED&/user/delete&Register a new user  \\ \hline
 
     \end{tabular}
     \caption{List of available endpoints}
@@ -197,87 +232,14 @@ List of endpoints exposed to the frontend application available for request proc
 
 
 \section{Endpoint Definitions}
-%https://github.com/MusApfel/latex-describe-rest-api
-\begin{apiRoute}{get}{/api/v01/user/find/\{id\}}{Get user record by user Id}
-	
-	\begin{routeParameter}
-		\routeParamItem{id}{id of storage}
-	\end{routeParameter}
-	\begin{routeResponse}{application/json}
-		\begin{routeResponseItem}{200}{ok}
-			\begin{routeResponseItemBody}
-{     
-	"id": 867654678,
-	"name" : "Apfelmus",
-	"count" : 25
-}
-			\end{routeResponseItemBody}
-		\end{routeResponseItem}
-		\begin{routeResponseItem}{404}{error: storage not found}
-			\begin{routeResponseItemBody}
-{
-	"message": "storage with id '11' not found!"
-}
-			\end{routeResponseItemBody}
-		\end{routeResponseItem}
-	\end{routeResponse}
-	
-\end{apiRoute}
-
-
-
-\begin{apiRoute}{post}{/api/storage/}{create a new storage}
-	\begin{routeParameter}
-		\noRouteParameter{no parameter}
-	\end{routeParameter}
-	\begin{routeRequest}{application/json}
-		\begin{routeRequestBody}
-{
-	"name" : "Apfelmus",
-	"count" : 25
-}
-		\end{routeRequestBody}
-	\end{routeRequest}
-	\begin{routeResponse}{application/json}
-		\begin{routeResponseItem}{200}{ok}
-			\begin{routeResponseItemBody}
-{     
-	"id": 867654678,
-	"name" : "Apfelmus",
-	"count" : 25
-}
-			\end{routeResponseItemBody}
-		\end{routeResponseItem}
-	\end{routeResponse}
-\end{apiRoute}
-
+\import{Endpoints/User}{user.tex}
 
 
 \section{Database Design}
 
 
-\begin{lstlisting}[language=Java, caption=Format XML for MAC calculation example]
-        
-    /**
-    * Returns part of XML string from which MAC should be generated.
-    * param xml XML String
-    * param macElementName XML element name from which the MAC should be generated
-    */
-   fun getXmlPartForMacVerification(xml: String, macElementName: String): String {
-       val macStartElement = "<$macElementName>"
-       val macEndElement = "</$macElementName>"
-       if (xml.contains(macStartElement) && xml.contains(macEndElement)) {
-           val macData = xml.substring(
-               xml.indexOf(macStartElement),
-               xml.indexOf(macEndElement) + macElementName.length + TAG_OFFSET
-           )
-           val macString = macData.replace(">[\\s]*<".toRegex(), "><")
-           log.debug("MAC string length: {}", macString.length)
-           return macString
-       } else {
-           throw ParsingErrorException("Missing element $macElementName for MAC.")
-       }
-   }
+\begin{lstlisting}[language=SQL, caption=Format XML for MAC calculation example]
+SELECT * FROM application_users as;
 \end{lstlisting}
 
 

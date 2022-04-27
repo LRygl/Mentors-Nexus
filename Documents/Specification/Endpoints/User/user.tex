@@ -1,0 +1,248 @@
+%https://github.com/MusApfel/latex-describe-rest-api
+\subsection{User}
+
+\begin{apiRoute}{get}{user/findUserById/\{id\}}{Get user record by user Id}
+	\begin{routeParameter}
+		\routeParamItem{id}{id of storage}
+	\end{routeParameter}
+	\begin{routeResponse}{application/json}
+		\begin{routeResponseItem}{200}{ok}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+		\begin{routeResponseItem}{404}{error: storage not found}
+			\begin{routeResponseItemBody}
+{
+	"message": "storage with id '11' not found!"
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+	\end{routeResponse}
+\end{apiRoute}
+
+\begin{apiRoute}{get}{user/list}{Get all users user record by user Id}
+	\begin{routeParameter}
+		\routeParamItem{id}{id of storage}
+	\end{routeParameter}
+	\begin{routeResponse}{application/json}
+		\begin{routeResponseItem}{200}{ok}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+		\begin{routeResponseItem}{404}{error: storage not found}
+			\begin{routeResponseItemBody}
+{
+	"message": "storage with id '11' not found!"
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+	\end{routeResponse}
+\end{apiRoute}
+
+
+
+
+
+
+
+
+\begin{apiRoute}{post}{/user/login}{Create a new user}
+	\begin{routeParameter}
+		\noRouteParameter{no parameter}
+	\end{routeParameter}
+	\begin{routeRequest}{application/json}
+		\begin{routeRequestBody}
+{
+	"name" : "Apfelmus",
+	"count" : 25
+}
+		\end{routeRequestBody}
+	\end{routeRequest}
+	\begin{routeResponse}{application/json}
+		\begin{routeResponseItem}{200}{OK}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+	"name" : "Apfelmus",
+	"count" : 25
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+        \begin{routeResponseItem}{400}{BAD REQUEST}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+	"name" : "Apfelmus",
+	"count" : 25
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+	\end{routeResponse}
+\end{apiRoute}
+
+
+
+\begin{apiRoute}{post}{/user/register}{Register a new user to the application and verify if the user can be created}
+	\begin{routeParameter}
+		\noRouteParameter{no parameter}
+	\end{routeParameter}
+	\begin{routeRequest}{application/json}
+		\begin{routeRequestBody}
+{
+	"name" : "Apfelmus",
+	"count" : 25
+}
+		\end{routeRequestBody}
+	\end{routeRequest}
+	\begin{routeResponse}{application/json}
+		\begin{routeResponseItem}{200}{OK}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+	"name" : "Apfelmus",
+	"count" : 25
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+	\end{routeResponse}
+\end{apiRoute}
+
+
+
+\begin{apiRoute}{post}{/user/passwordReset}{Register a new user to the application and verify if the user can be created}
+	\begin{routeParameter}
+		\noRouteParameter{no parameter}
+	\end{routeParameter}
+	\begin{routeRequest}{application/json}
+		\begin{routeRequestBody}
+{
+	"name" : "Apfelmus",
+	"count" : 25
+}
+		\end{routeRequestBody}
+	\end{routeRequest}
+	\begin{routeResponse}{application/json}
+		\begin{routeResponseItem}{200}{OK}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+	"name" : "Apfelmus",
+	"count" : 25
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+	\end{routeResponse}
+\end{apiRoute}
+
+
+
+\begin{apiRoute}{post}{/user/add}{Create a new user}
+	\begin{routeParameter}
+		\noRouteParameter{no parameter}
+	\end{routeParameter}
+	\begin{routeRequest}{application/json}
+		\begin{routeRequestBody}
+{
+	"name" : "Apfelmus",
+	"count" : 25
+}
+		\end{routeRequestBody}
+	\end{routeRequest}
+	\begin{routeResponse}{application/json}
+		\begin{routeResponseItem}{200}{OK}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+	"name" : "Apfelmus",
+	"count" : 25
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+        \begin{routeResponseItem}{400}{BAD REQUEST}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+	"name" : "Apfelmus",
+	"count" : 25
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+	\end{routeResponse}
+\end{apiRoute}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{apiRoute}{put}{/user/update/}{Update existing user}
+	\begin{routeParameter}
+		\noRouteParameter{no parameter}
+	\end{routeParameter}
+	\begin{routeRequest}{application/json}
+		\begin{routeRequestBody}
+{
+	"name" : "Apfelmus",
+	"count" : 25
+}
+		\end{routeRequestBody}
+	\end{routeRequest}
+	\begin{routeResponse}{application/json}
+		\begin{routeResponseItem}{200}{ok}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+	"name" : "Apfelmus",
+	"count" : 25
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+	\end{routeResponse}
+\end{apiRoute}
+
+
+
+
+
+
+
+
+
+
+\begin{apiRoute}{delete}{/user/storage/}{Delete existing user from the application}
+	\begin{routeParameter}
+		\noRouteParameter{no parameter}
+	\end{routeParameter}
+	\begin{routeRequest}{application/json}
+		\begin{routeRequestBody}
+{
+	"name" : "Apfelmus",
+	"count" : 25
+}
+		\end{routeRequestBody}
+	\end{routeRequest}
+	\begin{routeResponse}{application/json}
+		\begin{routeResponseItem}{200}{ok}
+			\begin{routeResponseItemBody}
+{     
+	"id": 867654678,
+	"name" : "Apfelmus",
+	"count" : 25
+}
+			\end{routeResponseItemBody}
+		\end{routeResponseItem}
+	\end{routeResponse}
+\end{apiRoute}
