@@ -6,6 +6,7 @@ import com.mentors.NexusApplication.Model.HttpResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -31,7 +33,18 @@ public class JwtAuthenticationEntryPoint extends Http403ForbiddenEntryPoint {
                 HttpStatus.FORBIDDEN.value(),
                 HttpStatus.FORBIDDEN,
                 HttpStatus.FORBIDDEN.getReasonPhrase().toUpperCase(),
-                SecurityConstant.FORBIDDEN_MESSAGE);
+                SecurityConstant.FORBIDDEN_MESSAGE
+        );
+
+/*        ResponseEntity<?> httpResponse = ResponseEntity.status(403).body(
+                HttpResponse.builder()
+                        .httpStatus(HttpStatus.FORBIDDEN)
+                        .httpStatusCode(HttpStatus.FORBIDDEN.value())
+                        .httpTimestamp(new Date(System.currentTimeMillis()))
+                        .httpStatusMessage("Status Message")
+                        .httpDeveloperMessage("Developer Message")
+                        .httpStatusReason("Status Reason")
+        );*/
 
         response.setContentType(APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.FORBIDDEN.value());

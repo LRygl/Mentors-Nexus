@@ -5,6 +5,7 @@ import com.mentors.NexusApplication.Filter.JwtAccessDeniedHandler;
 import com.mentors.NexusApplication.Filter.JwtAuthenticationEntryPoint;
 import com.mentors.NexusApplication.Filter.JwtAuthorisationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public SecurityConfiguration(JwtAccessDeniedHandler jwtAccessDeniedHandler,
                                  JwtAuthorisationFilter jwtAuthoristionFilter,
                                  JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-                                 UserDetailsService userDetailsService,
+                                 @Qualifier("userDetailService")UserDetailsService userDetailsService,
                                  BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
         this.jwtAuthoristionFilter = jwtAuthoristionFilter;

@@ -1,5 +1,7 @@
 package com.mentors.NexusApplication.Model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,10 +12,12 @@ public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(nullable = false,updatable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
     private String userFirstName;
     private String userLastName;
     private String username;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String userPassword;
     private String userEmail;
     private String userCompany;

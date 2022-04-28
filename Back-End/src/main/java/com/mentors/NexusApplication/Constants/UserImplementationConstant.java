@@ -7,5 +7,7 @@ public class UserImplementationConstant{
     public static final String NO_USER_FOUND_BY_ID = "No user found with this ID: ";
     public static final String FOUND_USER_BY_USERNAME = "Returning found user by username";
     public static final String NO_USER_FOUND_BY_EMAIL = "No user found with this email address";
+
+    public static final String NEW_USER_WAS_SUCCESSFULY_CREATED = "New user account has been successfuly created for customer ID(";
 }
 
