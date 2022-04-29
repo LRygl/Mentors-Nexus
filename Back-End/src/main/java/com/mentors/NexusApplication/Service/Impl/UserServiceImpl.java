@@ -2,10 +2,7 @@ package com.mentors.NexusApplication.Service.Impl;
 
 import com.mentors.NexusApplication.Constants.UserImplementationConstant;
 import com.mentors.NexusApplication.Enum.Role;
-import com.mentors.NexusApplication.Exceptions.EmailExistsException;
-import com.mentors.NexusApplication.Exceptions.EmailNotFoundException;
-import com.mentors.NexusApplication.Exceptions.UserNotFoundException;
-import com.mentors.NexusApplication.Exceptions.UsernameExistsException;
+import com.mentors.NexusApplication.Exceptions.*;
 import com.mentors.NexusApplication.Model.User;
 import com.mentors.NexusApplication.Model.UserPrincipal;
 import com.mentors.NexusApplication.Repository.UserRepository;
@@ -93,7 +90,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepository.findUserByUsername(username);
         if (user == null){
             logger.error("User not found by username: " + username);
-            throw new UsernameNotFoundException("User not found by username: " + username);
+            throw new UsernameNotFoundException("User not found");
         } else {
             validateLoginAttempt(user);
             user.setUserLastLoginDateDisplay(user.getUserLastLoginDate());
@@ -216,15 +213,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void resetPassword(String email) throws MessagingException, EmailNotFoundException {
+    public void resetUserPassword(String email, String username) throws MessagingException, EmailNotFoundException, PasswordResetException {
         User user = userRepository.findUserByUserEmail(email);
         if (user == null){
             throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
         }
-        String password = generatePassword();
-        user.setUserPassword(encodePassword(password));
-        userRepository.save(user);
-        emailService.sendNewPasswordEmail(user.getUserFirstName(),password,user.getUserEmail());
+        if (user.getUsername() == username){
+            String password = generatePassword();
+            user.setUserPassword(encodePassword(password));
+            userRepository.save(user);
+            emailService.sendNewPasswordEmail(user.getUserFirstName(),password,user.getUserEmail());
+        }
+        throw new PasswordResetException("MESSAGE PASSWORD RESET NOT POSSIBLE");
 
     }
 

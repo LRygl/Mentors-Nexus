@@ -27,24 +27,17 @@ public class JwtAuthenticationEntryPoint extends Http403ForbiddenEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException arg2) throws IOException {
-        logger.debug("Pre-authenticated entry point called. Rejecting access");
+        logger.info("Pre-authenticated entry point called. Rejecting access");
 
         HttpResponse httpResponse = new HttpResponse(
+                new Date(),
                 HttpStatus.FORBIDDEN.value(),
                 HttpStatus.FORBIDDEN,
                 HttpStatus.FORBIDDEN.getReasonPhrase().toUpperCase(),
-                SecurityConstant.FORBIDDEN_MESSAGE
+                SecurityConstant.FORBIDDEN_MESSAGE,
+                SecurityConstant.FORBIDDEN_MESSAGE,
+                null
         );
-
-/*        ResponseEntity<?> httpResponse = ResponseEntity.status(403).body(
-                HttpResponse.builder()
-                        .httpStatus(HttpStatus.FORBIDDEN)
-                        .httpStatusCode(HttpStatus.FORBIDDEN.value())
-                        .httpTimestamp(new Date(System.currentTimeMillis()))
-                        .httpStatusMessage("Status Message")
-                        .httpDeveloperMessage("Developer Message")
-                        .httpStatusReason("Status Reason")
-        );*/
 
         response.setContentType(APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.FORBIDDEN.value());

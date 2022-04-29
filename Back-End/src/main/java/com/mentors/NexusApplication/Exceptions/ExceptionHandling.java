@@ -1,5 +1,6 @@
 package com.mentors.NexusApplication.Exceptions;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.mentors.NexusApplication.Model.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,6 +8,10 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +30,8 @@ public class ExceptionHandling implements ErrorController {
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String httpStatusMessage) {
-        return ResponseEntity.status(HttpStatus.resolve(httpStatus.value()))
+        return ResponseEntity
+                .status(HttpStatus.resolve(httpStatus.value()))
                 .body(HttpResponse.builder()
                         .httpStatus(httpStatus)
                         .httpStatusCode(httpStatus.value())
@@ -37,7 +43,11 @@ public class ExceptionHandling implements ErrorController {
         );
     }
 
-/*
+    @ExceptionHandler(PasswordResetException.class)
+    public ResponseEntity<HttpResponse> passwordResetException(){
+        return createHttpResponse(HttpStatus.BAD_REQUEST,PASSWORD_RESET_NOT_POSSIBLE_NO_MATCH);
+    }
+
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<HttpResponse> accountDisabledException(){
         return createHttpResponse(HttpStatus.BAD_REQUEST, ACCOUNT_DISABLED);
@@ -45,7 +55,7 @@ public class ExceptionHandling implements ErrorController {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<HttpResponse> badCredentialsException(){
-        return createHttpResponse(HttpStatus.BAD_REQUEST, INCORRECT_CREDENTIALS);
+        return createHttpResponse(HttpStatus.UNAUTHORIZED, INCORRECT_CREDENTIALS);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -62,7 +72,7 @@ public class ExceptionHandling implements ErrorController {
     public ResponseEntity<HttpResponse> tokenExpiredException(TokenExpiredException exception){
         return createHttpResponse(HttpStatus.UNAUTHORIZED, exception.getMessage());
     }
-*/
+
 
     @ExceptionHandler(EmailExistsException.class)
     public ResponseEntity<HttpResponse> emailExistException(EmailExistsException exception){

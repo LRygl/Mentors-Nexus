@@ -1,9 +1,6 @@
 package com.mentors.NexusApplication.Service;
 
-import com.mentors.NexusApplication.Exceptions.EmailExistsException;
-import com.mentors.NexusApplication.Exceptions.EmailNotFoundException;
-import com.mentors.NexusApplication.Exceptions.UserNotFoundException;
-import com.mentors.NexusApplication.Exceptions.UsernameExistsException;
+import com.mentors.NexusApplication.Exceptions.*;
 import com.mentors.NexusApplication.Model.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +17,7 @@ public interface UserService {
     User findUserByUsername(String username);
     User findUserByEmail(String email);
 
-    void resetPassword(String email) throws MessagingException, EmailNotFoundException;
+    void resetUserPassword(String email, String username) throws MessagingException, EmailNotFoundException, PasswordResetException;
 
     User updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException;
 

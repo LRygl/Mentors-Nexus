@@ -13,16 +13,18 @@ import java.util.Map;
 @SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HttpResponse {
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy hh:mm:ss", timezone = "Europe/Prague")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-DD-dd hh:mm:ss", timezone = "Europe/Prague")
     private Date httpTimestamp;
     private int httpStatusCode;
     private HttpStatus httpStatus;
     private String httpStatusReason;
     private String httpStatusMessage;
     private String httpDeveloperMessage;
+    private String httpPath;
     private Map<?,?> httpResponseData;
 
-    public HttpResponse(int value, HttpStatus forbidden, String s, String forbiddenMessage) {}
+    public HttpResponse() {
+    }
 
     public HttpResponse(Date httpTimestamp, int httpStatusCode, HttpStatus httpStatus, String httpStatusReason, String httpStatusMessage, String httpDeveloperMessage, Map<?, ?> httpResponseData) {
         this.httpTimestamp = httpTimestamp;

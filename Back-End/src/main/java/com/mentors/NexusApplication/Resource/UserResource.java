@@ -1,9 +1,6 @@
 package com.mentors.NexusApplication.Resource;
 
-import com.mentors.NexusApplication.Exceptions.EmailExistsException;
-import com.mentors.NexusApplication.Exceptions.EmailNotFoundException;
-import com.mentors.NexusApplication.Exceptions.UserNotFoundException;
-import com.mentors.NexusApplication.Exceptions.UsernameExistsException;
+import com.mentors.NexusApplication.Exceptions.*;
 import com.mentors.NexusApplication.Model.HttpResponse;
 import com.mentors.NexusApplication.Model.User;
 import com.mentors.NexusApplication.Model.UserPrincipal;
@@ -111,7 +108,12 @@ public class UserResource {
         LOGGER.info("Logged in a new user with principal " + userPrincipal + " and token  " + jwtHeader + " for user " + loginUser);
         return new ResponseEntity<>(loginUser, jwtHeader , HttpStatus.OK);
     }
-
+    @PostMapping("/resetpassword")
+    public ResponseEntity<User> resetUserPassword(@RequestBody User user) throws EmailNotFoundException, MessagingException, PasswordResetException {
+        userService.resetUserPassword(user.getUserEmail(), user.getUsername());
+        LOGGER.info("Reseting user password");
+        return new ResponseEntity<>(null,null,HttpStatus.OK);
+    }
 
 
     //PRIVATE METHODS
