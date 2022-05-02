@@ -54,10 +54,12 @@ public class CourseServiceImpl implements CourseService {
         course.setPublished(false);
 
         courseRepository.save(course);
+        LOGGER.info("Created new course with id " + courseUUID);
         if(!Files.exists(coursePath)){
             Files.createDirectories(coursePath);
             LOGGER.info("Directory created " + coursePath);
         }
+
         return course;
     }
 
