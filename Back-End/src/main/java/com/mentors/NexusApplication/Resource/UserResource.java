@@ -9,6 +9,7 @@ import com.mentors.NexusApplication.Service.UserService;
 import com.mentors.NexusApplication.Utils.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.mentors.NexusApplication.Constants.SecurityConstant.JWT_TOKEN_HEADER;
 
@@ -47,6 +49,14 @@ public class UserResource {
         List<User> users = userService.getUsers();
         LOGGER.debug("Returning all users" + users);
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/pagingUsers")
+    public Page<User> userPaginationAndSorting(@RequestParam(value = "page",defaultValue = "0", required = false) Integer page,
+                                               @RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize,
+                                               @RequestParam(value = "order",defaultValue = "ASC", required = false) String sortDirection,
+                                               @RequestParam(value = "sort", defaultValue = "id", required = false) String sortBy){
+        return userService.getUserPaginationAndSorting(page,pageSize,sortDirection,sortBy);
     }
 
     @PostMapping("/add")

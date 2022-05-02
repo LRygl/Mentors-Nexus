@@ -1,6 +1,5 @@
 package com.mentors.NexusApplication.Service.Impl;
 
-import com.mentors.NexusApplication.Constants.UserImplementationConstant;
 import com.mentors.NexusApplication.Enum.Role;
 import com.mentors.NexusApplication.Exceptions.*;
 import com.mentors.NexusApplication.Model.User;
@@ -13,18 +12,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
-
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
@@ -63,6 +63,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Page<User> getUserPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortDirection, String sortBy){
+        Sort sort = Sort.by(getSortDirection(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(pageNumber,pageSize,sort);
+        return userRepository.findAll(pageable);
+    }
+
+    private Sort.Direction getSortDirection(String sortDirection){
+        if(sortDirection.equals("desc")){
+            return Sort.Direction.DESC;
+        }
+        return Sort.Direction.ASC;
     }
 
     public User findUserById(Long id){

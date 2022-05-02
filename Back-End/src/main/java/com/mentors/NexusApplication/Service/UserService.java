@@ -2,11 +2,13 @@ package com.mentors.NexusApplication.Service;
 
 import com.mentors.NexusApplication.Exceptions.*;
 import com.mentors.NexusApplication.Model.User;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -23,4 +25,6 @@ public interface UserService {
 
 
     Boolean deleteUserById(Long id);
+
+    Page<User> getUserPaginationAndSorting(Integer page, Integer pageSize,String sortDirection, String sortBy);
 }
