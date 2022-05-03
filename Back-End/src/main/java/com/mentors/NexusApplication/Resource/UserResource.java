@@ -20,11 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.mentors.NexusApplication.Constants.SecurityConstant.JWT_TOKEN_HEADER;
 
@@ -33,9 +31,9 @@ import static com.mentors.NexusApplication.Constants.SecurityConstant.JWT_TOKEN_
 public class UserResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private UserService userService;
-    private AuthenticationManager authenticationManager;
-    private JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public UserResource(UserService userService, AuthenticationManager authenticationManager,JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
@@ -67,7 +65,7 @@ public class UserResource {
                                            @RequestParam("role") String role,
                                            @RequestParam("isActive") String isActive,
                                            @RequestParam("isNonLocked") String isNonLocked,
-                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException, EmailNotFoundException {
+                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException {
         User newUser = userService.addNewUser(firstName, lastName, username, email, role, Boolean.parseBoolean(isActive) ,Boolean.parseBoolean(isNonLocked), profileImage);
         LOGGER.debug("Returning all users");
         return new ResponseEntity<>(newUser, HttpStatus.OK);
@@ -82,7 +80,7 @@ public class UserResource {
                                        @RequestParam("role") String role,
                                        @RequestParam("isActive") String isActive,
                                        @RequestParam("isNonLocked") String isNonLocked,
-                                       @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException, EmailNotFoundException {
+                                       @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException {
         User updateUser = userService.updateUser(currentUsername, firstName, lastName, username, email, role, Boolean.parseBoolean(isActive) ,Boolean.parseBoolean(isNonLocked), profileImage);
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }

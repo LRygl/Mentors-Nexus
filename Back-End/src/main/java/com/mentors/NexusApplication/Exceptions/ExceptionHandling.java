@@ -42,6 +42,10 @@ public class ExceptionHandling implements ErrorController {
                         .build()
         );
     }
+    @ExceptionHandler(CourseNotFoundException.class)
+    public ResponseEntity<HttpResponse> CourseNotFoundException(){
+        return createHttpResponse(HttpStatus.NOT_FOUND,"COURSE WAS NOT FOUND");
+    }
 
     @ExceptionHandler(PasswordResetException.class)
     public ResponseEntity<HttpResponse> passwordResetException(){

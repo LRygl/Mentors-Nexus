@@ -3,6 +3,7 @@ package com.mentors.NexusApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.File;
@@ -10,6 +11,7 @@ import java.io.File;
 import static com.mentors.NexusApplication.Constants.FileConstant.USER_FOLDER;
 
 @SpringBootApplication
+@EnableScheduling
 public class NexusApplication {
 
 	public static void main(String[] args) {
