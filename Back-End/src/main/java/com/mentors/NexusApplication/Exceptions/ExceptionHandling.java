@@ -42,6 +42,13 @@ public class ExceptionHandling implements ErrorController {
                         .build()
         );
     }
+
+
+    @ExceptionHandler(CourseCategoryNotFoundException.class)
+    public ResponseEntity<HttpResponse> CourseCategoryNotFoundException(){
+        return createHttpResponse(HttpStatus.NOT_FOUND,"COURSE CATEGORY WAS NOT FOUND");
+    }
+
     @ExceptionHandler(CourseNotFoundException.class)
     public ResponseEntity<HttpResponse> CourseNotFoundException(){
         return createHttpResponse(HttpStatus.NOT_FOUND,"COURSE WAS NOT FOUND");

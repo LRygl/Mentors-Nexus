@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name="course")
+@Table(name="COURSE")
 public class Course {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -18,13 +18,17 @@ public class Course {
     private String courseName;
     private String courseDescription;
     private Long courseOwnerId;
-    private Long courseCategoryId;
     private Date courseCreated;
     private Date coursePublishDate;
     private Date courseUpdated;
-
+    private Long courseCategoryId;
     private Boolean isPublished;
     private Boolean isPrivate;
+
+    @ManyToOne
+    @JoinColumn(name = "ID")
+    private CourseCategory courseCategories;
+    //MANYTOONE
 
     public Course() {
     }
