@@ -1,6 +1,7 @@
 package com.mentors.NexusApplication.Resource;
 
 import com.mentors.NexusApplication.Exceptions.*;
+import com.mentors.NexusApplication.Model.Course;
 import com.mentors.NexusApplication.Model.HttpResponse;
 import com.mentors.NexusApplication.Model.User;
 import com.mentors.NexusApplication.Model.UserPrincipal;
@@ -69,6 +70,16 @@ public class UserResource {
         User newUser = userService.addNewUser(firstName, lastName, username, email, role, Boolean.parseBoolean(isActive) ,Boolean.parseBoolean(isNonLocked), profileImage);
         LOGGER.debug("Returning all users");
         return new ResponseEntity<>(newUser, HttpStatus.OK);
+    }
+
+    @PostMapping("/{userId}/course/{courseId}")
+    public ResponseEntity<User> enrollUserToCourse(
+            @PathVariable(value="courseId") Long courseId,
+            @PathVariable(value="userId") Long userId)
+    {
+        User course = userService.enrollUserToCourse(courseId,userId);
+
+        return new ResponseEntity<>(course,HttpStatus.OK);
     }
 
     @PutMapping("/update")

@@ -10,10 +10,12 @@ import java.util.List;
 public interface CourseService {
     List<Course> getAllCourses();
     List<Course> getAllPublishedCourses();
+    //List<Course> getAllCoursesByUserId(Long userId);
     void updateAllCoursesPublishedState();
-    Course updateCourse(Long id, String courseName, String courseDescription, Long courseOwnerId, Long courseCategoryId, Date coursePublishedDate, Boolean courseIsPrivate, Boolean courseIsPublished) throws CourseNotFoundException;
-    Course addNewCourse(String courseName, String courseDescription, Long courseOwnerId, Long courseCategoryId) throws IOException;
+    Course updateCourse(Long id, String courseName, String courseDescription, Long courseOwnerId, Date coursePublishedDate, Boolean courseIsPrivate, Boolean courseIsPublished) throws CourseNotFoundException;
+    Course addNewCourse(String courseName, String courseDescription, Long courseOwnerId) throws IOException;
     Course findCourseById(Long id) throws CourseNotFoundException;
-
     Boolean deleteCourseById(Long id);
+
+
 }

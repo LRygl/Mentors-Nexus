@@ -3,6 +3,9 @@ package com.mentors.NexusApplication.Resource;
 import com.mentors.NexusApplication.Exceptions.CourseNotFoundException;
 import com.mentors.NexusApplication.Model.Course;
 import com.mentors.NexusApplication.Model.HttpResponse;
+import com.mentors.NexusApplication.Model.User;
+import com.mentors.NexusApplication.Repository.CourseRepository;
+import com.mentors.NexusApplication.Repository.UserRepository;
 import com.mentors.NexusApplication.Service.CourseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +21,13 @@ import java.util.Map;
 @RequestMapping(path = "/course")
 public class CourseResource {
     private final CourseService courseService;
+    private final CourseRepository courseRepository;
+    private final UserRepository userRepository;
 
-    public CourseResource(CourseService courseService) {
+    public CourseResource(CourseService courseService, CourseRepository courseRepository, UserRepository userRepository) {
         this.courseService = courseService;
+        this.courseRepository = courseRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping(path ="/list/all")
@@ -41,11 +48,16 @@ public class CourseResource {
         return null;
     }
 
+/*    @GetMapping("/list/user/{id}")
+    public ResponseEntity<List<Course>> getAllCoursesByUserId(@PathVariable(value = "id",name = "id") Long userId){
+        return new ResponseEntity<>(courseService.getAllCoursesByUserId(userId),HttpStatus.OK);
+    }*/
     @GetMapping(path = "/{id}")
     public ResponseEntity<Course> getCourseByCourseId(@PathVariable(value = "id",name = "id") Long id) throws CourseNotFoundException {
         Course course = courseService.findCourseById(id);
         return new ResponseEntity<>(course,HttpStatus.OK);
     }
+
 
     @PostMapping("/add")
     public ResponseEntity<Course> addNewCourse(
@@ -55,7 +67,7 @@ public class CourseResource {
             @RequestParam(value = "courseCategoryId") Long courseCategoryId
     ) throws IOException {
 
-        Course newCourse = courseService.addNewCourse(courseName,courseDescription,courseOwnerId,courseCategoryId);
+        Course newCourse = courseService.addNewCourse(courseName,courseDescription,courseOwnerId);
         return new ResponseEntity<>(newCourse,HttpStatus.OK);
     }
 
@@ -66,10 +78,10 @@ public class CourseResource {
                 course.getCourseName(),
                 course.getCourseDescription(),
                 course.getCourseOwnerId(),
-                course.getCourseCategoryId(),
                 course.getCoursePublishDate(),
                 course.getPrivate(),
                 course.getPublished());
+
         return new ResponseEntity<>(updatedCourse,HttpStatus.OK);
     }
 

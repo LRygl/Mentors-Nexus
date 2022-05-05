@@ -2,12 +2,18 @@ package com.mentors.NexusApplication.Service.Impl;
 
 import com.mentors.NexusApplication.Exceptions.CourseNotFoundException;
 import com.mentors.NexusApplication.Model.Course;
+import com.mentors.NexusApplication.Model.CourseCategory;
+import com.mentors.NexusApplication.Model.User;
+import com.mentors.NexusApplication.Repository.CourseCategoryRepository;
 import com.mentors.NexusApplication.Repository.CourseRepository;
+import com.mentors.NexusApplication.Repository.UserRepository;
 import com.mentors.NexusApplication.Service.CourseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 
 import javax.transaction.Transactional;
@@ -28,15 +34,19 @@ public class CourseServiceImpl implements CourseService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CourseServiceImpl.class);
 
     private final CourseRepository courseRepository;
+    private final UserRepository userRepository;
+    private final CourseCategoryRepository courseCategoryRepository;
 
-    public CourseServiceImpl(CourseRepository courseRepository) {
+    public CourseServiceImpl(CourseRepository courseRepository, UserRepository userRepository,CourseCategoryRepository courseCategoryRepository) {
         this.courseRepository = courseRepository;
+        this.userRepository = userRepository;
+        this.courseCategoryRepository = courseCategoryRepository;
     }
 
     public List<Course> getAllCourses(){ return courseRepository.findAll(); }
 
     public List<Course> getAllPublishedCourses(){ return courseRepository.findByIsPublished(true); }
-
+    //public List<Course> getAllCoursesByUserId(Long userId){ return courseRepository.findCoursesByUserId(userId); }
     public Course findCourseById(Long id) throws CourseNotFoundException {
         Course course = courseRepository.findCourseById(id);
         if(course == null){
@@ -46,7 +56,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course addNewCourse(String courseName, String courseDescription, Long courseOwnerId, Long courseCategoryId) throws IOException {
+    public Course addNewCourse(String courseName, String courseDescription, Long courseOwnerId) throws IOException {
         Course course = new Course();
         UUID courseUUID = UUID.randomUUID();
         Path coursePath =  Paths.get(COURSE_FOLDER + courseUUID);
@@ -54,7 +64,6 @@ public class CourseServiceImpl implements CourseService {
         course.setCourseName(courseName);
         course.setCourseDescription(courseDescription);
         course.setCourseOwnerId(courseOwnerId);
-        course.setCourseCategoryId(courseCategoryId);
         course.setCourseId(courseUUID);
         course.setCourseCreated(new Date());
         course.setCourseUpdated(new Date());
@@ -70,14 +79,13 @@ public class CourseServiceImpl implements CourseService {
         return course;
     }
 
-    public Course updateCourse(Long id, String courseName, String courseDescription, Long courseOwnerId, Long courseCategoryId,Date coursePublishedDate, Boolean courseIsPrivate, Boolean courseIsPublished) throws CourseNotFoundException {
+    public Course updateCourse(Long id, String courseName, String courseDescription, Long courseOwnerId,Date coursePublishedDate, Boolean courseIsPrivate, Boolean courseIsPublished) throws CourseNotFoundException {
         Course course = validateIfCourseExistsById(id);
 
         Boolean resultingPublishedState = validateCoursePublishedState(coursePublishedDate,courseIsPublished);
         course.setCourseName(courseName);
         course.setCourseDescription(courseDescription);
         course.setCourseOwnerId(courseOwnerId);
-        course.setCourseCategoryId(courseCategoryId);
         course.setCoursePublishDate(coursePublishedDate);
         course.setPrivate(courseIsPrivate);
         course.setPublished(resultingPublishedState);
@@ -99,6 +107,9 @@ public class CourseServiceImpl implements CourseService {
         }
         return courseById;
     }
+
+
+
 
     public void updateAllCoursesPublishedState(){
         List<Course> courses = getAllCourses();

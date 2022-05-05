@@ -1,18 +1,22 @@
 package com.mentors.NexusApplication.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Table(name="COURSE")
 public class Course {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    @Column(nullable = false,updatable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "courseGenerator")
+    @SequenceGenerator(name = "courseGenerator", sequenceName = "course_sequence", allocationSize = 10)
+    @Column(nullable = false, updatable = false)
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
     private UUID courseId;
     private String courseName;
@@ -21,30 +25,37 @@ public class Course {
     private Date courseCreated;
     private Date coursePublishDate;
     private Date courseUpdated;
-    private Long courseCategoryId;
     private Boolean isPublished;
     private Boolean isPrivate;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_category_id",referencedColumnName = "id")
+    private CourseCategory courseCategory;
 
-    @ManyToOne
-    @JoinColumn(name = "ID")
-    private CourseCategory courseCategories;
-    //MANYTOONE
+    @ManyToMany(fetch = FetchType.LAZY,
+                cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "enrolledCourses")
+    @JsonIgnore
+    private Set<User> enrolledUsers = new HashSet<>();
 
     public Course() {
     }
 
-    public Course(Long id, UUID courseId, String courseName, String courseDescription, Long courseOwnerId, Long courseCategoryId, Date courseCreated, Date coursePublishDate, Date courseUpdated, Boolean isPublished, Boolean isPrivate) {
+    public Course(Long id, UUID courseId, String courseName, String courseDescription, Long courseOwnerId, Date courseCreated, Date coursePublishDate, Date courseUpdated, Boolean isPublished, Boolean isPrivate, CourseCategory courseCategory, Set<User> enrolledUsers) {
         this.id = id;
         this.courseId = courseId;
         this.courseName = courseName;
         this.courseDescription = courseDescription;
         this.courseOwnerId = courseOwnerId;
-        this.courseCategoryId = courseCategoryId;
         this.courseCreated = courseCreated;
         this.coursePublishDate = coursePublishDate;
         this.courseUpdated = courseUpdated;
         this.isPublished = isPublished;
         this.isPrivate = isPrivate;
+        this.courseCategory = courseCategory;
+        this.enrolledUsers = enrolledUsers;
     }
 
     public Long getId() {
@@ -87,14 +98,6 @@ public class Course {
         this.courseOwnerId = courseOwnerId;
     }
 
-    public Long getCourseCategoryId() {
-        return courseCategoryId;
-    }
-
-    public void setCourseCategoryId(Long courseCategoryId) {
-        this.courseCategoryId = courseCategoryId;
-    }
-
     public Date getCourseCreated() {
         return courseCreated;
     }
@@ -134,5 +137,26 @@ public class Course {
     public void setPrivate(Boolean aPrivate) {
         isPrivate = aPrivate;
     }
+
+    public CourseCategory getCourseCategory() {
+        return courseCategory;
+    }
+
+    public void setCourseCategory(CourseCategory courseCategory) {
+        this.courseCategory = courseCategory;
+    }
+
+    public Set<User> getEnrolledUsers() {
+        return enrolledUsers;
+    }
+
+    public void setEnrolledUsers(Set<User> enrolledUsers) {
+        this.enrolledUsers = enrolledUsers;
+    }
+
+    public void enrollToCourse(User user) {
+        enrolledUsers.add(user);
+    }
 }
+
 

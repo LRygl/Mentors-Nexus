@@ -2,8 +2,10 @@ package com.mentors.NexusApplication.Service.Impl;
 
 import com.mentors.NexusApplication.Enum.Role;
 import com.mentors.NexusApplication.Exceptions.*;
+import com.mentors.NexusApplication.Model.Course;
 import com.mentors.NexusApplication.Model.User;
 import com.mentors.NexusApplication.Model.UserPrincipal;
+import com.mentors.NexusApplication.Repository.CourseRepository;
 import com.mentors.NexusApplication.Repository.UserRepository;
 import com.mentors.NexusApplication.Service.EmailService;
 import com.mentors.NexusApplication.Service.LoginAttemptService;
@@ -47,14 +49,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private UserRepository userRepository;
-    private LoginAttemptService loginAttemptService;
-    private BCryptPasswordEncoder passwordEncoder;
-    private EmailService emailService;
+    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
+    private final LoginAttemptService loginAttemptService;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,BCryptPasswordEncoder passwordEncoder,LoginAttemptService loginAttemptService,EmailService emailService) {
+    public UserServiceImpl(UserRepository userRepository,CourseRepository courseRepository,BCryptPasswordEncoder passwordEncoder,LoginAttemptService loginAttemptService,EmailService emailService) {
         this.userRepository = userRepository;
+        this.courseRepository = courseRepository;
         this.loginAttemptService = loginAttemptService;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
@@ -194,6 +198,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return currentUser;
     }
 
+    public User enrollUserToCourse(Long courseId, Long userId){
+        Course course = courseRepository.findCourseById(courseId);
+        User user = userRepository.findUserById(userId);
+        user.addUserToCourse(course);
+
+        return userRepository.save(user);
+    }
+
+
     private User validateNewUsernameAndEmail(String currentUserName, String newUserName, String userEmail) throws EmailExistsException, UsernameExistsException, UserNotFoundException {
         User userByNewUsername = findUserByUsername(newUserName);
         User userByNewEmail = findUserByEmail(userEmail);
@@ -221,7 +234,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return null;
         }
     }
-
     private String generateUserPassword(){
         return RandomStringUtils.randomAlphanumeric(10);
     }

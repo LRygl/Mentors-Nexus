@@ -1,18 +1,18 @@
 package com.mentors.NexusApplication.Model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name="COURSE_CATEGORY")
 public class CourseCategory {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    @Column(nullable = false,updatable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categoryGenerator")
+    @SequenceGenerator(name = "categoryGenerator", sequenceName = "course_category_sequence", allocationSize = 10)
+    @Column(nullable = false, updatable = false)
     private Long id;
     private String courseCategoryName;
     private String courseCategoryDescription;
@@ -21,11 +21,14 @@ public class CourseCategory {
     private Date courseCategoryCreatedDate;
     private Date courseCategoryUpdatedDate;
     private Boolean isCourseCategoryActive;
+    @JsonIgnore
+    @OneToMany(mappedBy = "courseCategory")
+    private List<Course> courses;
 
     public CourseCategory() {
     }
 
-    public CourseCategory(Long id, String courseCategoryName, String courseCategoryDescription, String courseCategoryCode, Date courseCategoryCreatedDate, Date courseCategoryUpdatedDate, Boolean isCourseCategoryActive) {
+    public CourseCategory(Long id, String courseCategoryName, String courseCategoryDescription, String courseCategoryCode, Date courseCategoryCreatedDate, Date courseCategoryUpdatedDate, Boolean isCourseCategoryActive, List<Course> courses) {
         this.id = id;
         this.courseCategoryName = courseCategoryName;
         this.courseCategoryDescription = courseCategoryDescription;
@@ -33,6 +36,7 @@ public class CourseCategory {
         this.courseCategoryCreatedDate = courseCategoryCreatedDate;
         this.courseCategoryUpdatedDate = courseCategoryUpdatedDate;
         this.isCourseCategoryActive = isCourseCategoryActive;
+        this.courses = courses;
     }
 
     public Long getId() {
@@ -89,5 +93,13 @@ public class CourseCategory {
 
     public void setCourseCategoryActive(Boolean courseCategoryActive) {
         isCourseCategoryActive = courseCategoryActive;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }
