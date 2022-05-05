@@ -43,6 +43,10 @@ public class ExceptionHandling implements ErrorController {
         );
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<HttpResponse> ResourceNotFoundException(){
+        return createHttpResponse(HttpStatus.NOT_FOUND,"RESOURCE WAS NOT FOUND");
+    }
 
     @ExceptionHandler(CourseCategoryNotFoundException.class)
     public ResponseEntity<HttpResponse> CourseCategoryNotFoundException(){
