@@ -10,6 +10,7 @@ import com.mentors.NexusApplication.Repository.UserRepository;
 import com.mentors.NexusApplication.Service.EmailService;
 import com.mentors.NexusApplication.Service.LoginAttemptService;
 import com.mentors.NexusApplication.Service.UserService;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,16 +199,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return currentUser;
     }
 
-    public User enrollUserToCourse(Long courseId, Long userId){
+    public User enrollUserToCourse(Long courseId, Long userId) throws ResourceNotFoundException {
         Course course = courseRepository.findCourseById(courseId);
-        User user = userRepository.findUserById(userId);
+        //User user = userRepository.findUserById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Not found"));
         user.addUserToCourse(course);
 
         return userRepository.save(user);
     }
 
+    public User removeUserFromCourse(Long courseId, Long userId) {
+        Course course = courseRepository.findCourseById(courseId);
+        User user = userRepository.findUserById(userId);
+        user.removeUserFromCourse(course);
 
-    private User validateNewUsernameAndEmail(String currentUserName, String newUserName, String userEmail) throws EmailExistsException, UsernameExistsException, UserNotFoundException {
+        return userRepository.save(user);
+    }
+
+
+    private @Nullable User validateNewUsernameAndEmail(String currentUserName, String newUserName, String userEmail) throws EmailExistsException, UsernameExistsException, UserNotFoundException {
         User userByNewUsername = findUserByUsername(newUserName);
         User userByNewEmail = findUserByEmail(userEmail);
 

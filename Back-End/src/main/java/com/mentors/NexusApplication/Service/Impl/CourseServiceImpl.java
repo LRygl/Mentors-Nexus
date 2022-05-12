@@ -91,7 +91,7 @@ public class CourseServiceImpl implements CourseService {
         course.setPublished(resultingPublishedState);
         course.setCourseUpdated(new Date());
 
-        courseRepository.save(course).or;
+        courseRepository.save(course);
         return course;
     }
 

@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="COURSE_CATEGORY")
@@ -21,14 +22,17 @@ public class CourseCategory {
     private Date courseCategoryCreatedDate;
     private Date courseCategoryUpdatedDate;
     private Boolean isCourseCategoryActive;
-    @JsonIgnore
-    @OneToMany(mappedBy = "courseCategory")
-    private List<Course> courses;
+    @OneToMany(
+            mappedBy = "courseCategory",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
+    private Set<Course> courses = new HashSet<>();
 
     public CourseCategory() {
     }
 
-    public CourseCategory(Long id, String courseCategoryName, String courseCategoryDescription, String courseCategoryCode, Date courseCategoryCreatedDate, Date courseCategoryUpdatedDate, Boolean isCourseCategoryActive, List<Course> courses) {
+    public CourseCategory(Long id, String courseCategoryName, String courseCategoryDescription, String courseCategoryCode, Date courseCategoryCreatedDate, Date courseCategoryUpdatedDate, Boolean isCourseCategoryActive, Set<Course> courses) {
         this.id = id;
         this.courseCategoryName = courseCategoryName;
         this.courseCategoryDescription = courseCategoryDescription;
@@ -95,11 +99,16 @@ public class CourseCategory {
         isCourseCategoryActive = courseCategoryActive;
     }
 
-    public List<Course> getCourses() {
+    public Set<Course> getCourses() {
         return courses;
     }
 
-    public void setCourses(List<Course> courses) {
+    public void setCourses(Set<Course> courses) {
         this.courses = courses;
+    }
+
+    public void addCourseCategory(Course course){
+        courses.add(course);
+        course.setCourseCategory(this);
     }
 }

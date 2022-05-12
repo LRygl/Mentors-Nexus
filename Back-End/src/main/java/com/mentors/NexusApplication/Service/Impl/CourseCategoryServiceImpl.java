@@ -44,6 +44,10 @@ public class CourseCategoryServiceImpl implements CourseCategoryService {
         return courseCategory;
     }
 
+    public CourseCategory addCourseCagoryToCourse(Long CourseId){
+        return null;
+    };
+
     public CourseCategory updateCourseCategory(Long id, String courseCategoryName, String courseCategoryDescription, Boolean courseCategoryActive) throws CourseCategoryNotFoundException {
         CourseCategory courseCategory = validateIfCourseCategoryExistsById(id);
 

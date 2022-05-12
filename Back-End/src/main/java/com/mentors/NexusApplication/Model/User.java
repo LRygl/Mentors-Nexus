@@ -221,4 +221,9 @@ public class User {
         course.getEnrolledUsers().add(this);
     }
 
+    public void removeUserFromCourse(Course course){
+        this.enrolledCourses.remove(course);
+        course.getEnrolledUsers().remove(this);
+    }
+
 }

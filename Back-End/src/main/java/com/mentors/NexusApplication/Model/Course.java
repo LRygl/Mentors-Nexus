@@ -157,6 +157,8 @@ public class Course {
     public void enrollToCourse(User user) {
         enrolledUsers.add(user);
     }
+
+
 }
 
 

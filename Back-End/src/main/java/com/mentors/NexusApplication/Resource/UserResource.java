@@ -1,7 +1,6 @@
 package com.mentors.NexusApplication.Resource;
 
 import com.mentors.NexusApplication.Exceptions.*;
-import com.mentors.NexusApplication.Model.Course;
 import com.mentors.NexusApplication.Model.HttpResponse;
 import com.mentors.NexusApplication.Model.User;
 import com.mentors.NexusApplication.Model.UserPrincipal;
@@ -75,8 +74,7 @@ public class UserResource {
     @PostMapping("/{userId}/course/{courseId}")
     public ResponseEntity<User> enrollUserToCourse(
             @PathVariable(value="courseId") Long courseId,
-            @PathVariable(value="userId") Long userId)
-    {
+            @PathVariable(value="userId") Long userId) throws ResourceNotFoundException {
         User course = userService.enrollUserToCourse(courseId,userId);
 
         return new ResponseEntity<>(course,HttpStatus.OK);
@@ -109,6 +107,16 @@ public class UserResource {
                         .httpStatusReason("test")
                         .build()
         );
+    }
+
+    @DeleteMapping("/{userId}/course/{courseId}")
+    public ResponseEntity<User> removeUserFromCourse(
+            @PathVariable(value="courseId") Long courseId,
+            @PathVariable(value="userId") Long userId)
+    {
+        User course = userService.removeUserFromCourse(courseId,userId);
+
+        return new ResponseEntity<>(course,HttpStatus.OK);
     }
 
     @PostMapping("/register")
