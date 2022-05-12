@@ -1,7 +1,6 @@
 package com.mentors.NexusApplication.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,7 +17,7 @@ public class Course {
     @Column(nullable = false, updatable = false)
     //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
-    private UUID courseId;
+    private UUID courseUUID;
     private String courseName;
     private String courseDescription;
     private Long courseOwnerId;
@@ -43,9 +42,9 @@ public class Course {
     public Course() {
     }
 
-    public Course(Long id, UUID courseId, String courseName, String courseDescription, Long courseOwnerId, Date courseCreated, Date coursePublishDate, Date courseUpdated, Boolean isPublished, Boolean isPrivate, CourseCategory courseCategory, Set<User> enrolledUsers) {
+    public Course(Long id, UUID courseUUID, String courseName, String courseDescription, Long courseOwnerId, Date courseCreated, Date coursePublishDate, Date courseUpdated, Boolean isPublished, Boolean isPrivate, CourseCategory courseCategory, Set<User> enrolledUsers) {
         this.id = id;
-        this.courseId = courseId;
+        this.courseUUID = courseUUID;
         this.courseName = courseName;
         this.courseDescription = courseDescription;
         this.courseOwnerId = courseOwnerId;
@@ -66,12 +65,12 @@ public class Course {
         this.id = id;
     }
 
-    public UUID getCourseId() {
-        return courseId;
+    public UUID getCourseUUID() {
+        return courseUUID;
     }
 
-    public void setCourseId(UUID courseId) {
-        this.courseId = courseId;
+    public void setCourseUUID(UUID courseId) {
+        this.courseUUID = courseId;
     }
 
     public String getCourseName() {

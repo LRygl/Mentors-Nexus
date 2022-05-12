@@ -1,9 +1,8 @@
 package com.mentors.NexusApplication.Service.Impl;
 
 import com.mentors.NexusApplication.Exceptions.CourseNotFoundException;
+import com.mentors.NexusApplication.Exceptions.ResourceNotFoundException;
 import com.mentors.NexusApplication.Model.Course;
-import com.mentors.NexusApplication.Model.CourseCategory;
-import com.mentors.NexusApplication.Model.User;
 import com.mentors.NexusApplication.Repository.CourseCategoryRepository;
 import com.mentors.NexusApplication.Repository.CourseRepository;
 import com.mentors.NexusApplication.Repository.UserRepository;
@@ -12,8 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.util.StringUtils;
 
 
 import javax.transaction.Transactional;
@@ -46,7 +44,36 @@ public class CourseServiceImpl implements CourseService {
     public List<Course> getAllCourses(){ return courseRepository.findAll(); }
 
     public List<Course> getAllPublishedCourses(){ return courseRepository.findByIsPublished(true); }
-    //public List<Course> getAllCoursesByUserId(Long userId){ return courseRepository.findCoursesByUserId(userId); }
+
+    @Override
+    public List<Course> getAllCoursesByCategoryId(long courseCategoryId) throws ResourceNotFoundException {
+       if(!courseCategoryRepository.existsById(courseCategoryId)){
+           throw new ResourceNotFoundException("Not found");
+       }
+       return courseRepository.findByCourseCategoryId(courseCategoryId);
+    }
+
+    @Override
+    public List<Course> getAllCoursesByUserId(Long userId) throws ResourceNotFoundException {
+        if(!userRepository.existsById(userId)){
+            throw new ResourceNotFoundException("User not found");
+        }
+        return courseRepository.findCoursesByEnrolledUsersId(userId);
+    }
+//TODO Resolve how to pass optional values for Ids
+    @Override
+    public List<Course> getAllFilteredCourses(Long courseCategoryId, Long userId) throws ResourceNotFoundException {
+        if(!courseCategoryRepository.existsById(courseCategoryId) || !userRepository.existsById(userId)){
+            throw new ResourceNotFoundException("User or Category not found");
+        }
+
+        if(courseCategoryId==null && userId==null){
+            return courseRepository.findAll();
+        }
+
+        return null;
+    }
+
     public Course findCourseById(Long id) throws CourseNotFoundException {
         Course course = courseRepository.findCourseById(id);
         if(course == null){
@@ -64,7 +91,7 @@ public class CourseServiceImpl implements CourseService {
         course.setCourseName(courseName);
         course.setCourseDescription(courseDescription);
         course.setCourseOwnerId(courseOwnerId);
-        course.setCourseId(courseUUID);
+        course.setCourseUUID(courseUUID);
         course.setCourseCreated(new Date());
         course.setCourseUpdated(new Date());
         course.setPrivate(false);
@@ -100,6 +127,8 @@ public class CourseServiceImpl implements CourseService {
         return true;
     }
 
+
+
     private Course validateIfCourseExistsById(Long id) throws CourseNotFoundException {
         Course courseById = findCourseById(id);
         if( courseById == null ){
@@ -108,19 +137,16 @@ public class CourseServiceImpl implements CourseService {
         return courseById;
     }
 
-
-
-
     public void updateAllCoursesPublishedState(){
         List<Course> courses = getAllCourses();
         for (Course course : courses){
             if (course.getCoursePublishDate()==null || course.getPublished()){
-                LOGGER.info("Skipping course " + course.getCourseName() + " (ID) " + course.getCourseId() + " published date not set or already published course");
+                LOGGER.info("Skipping course " + course.getCourseName() + " (ID) " + course.getCourseUUID() + " published date not set or already published course");
                 continue;
             }
             if (course.getCoursePublishDate().before(new Date())){
                 course.setPublished(true);
-                LOGGER.info("Updated status to PUBLISHED for course " + course.getCourseName() + " " + course.getCourseId());
+                LOGGER.info("Updated status to PUBLISHED for course " + course.getCourseName() + " " + course.getCourseUUID());
             } else {
                 LOGGER.info("Course " + course.getCourseName() + " remains unpublished");
             }

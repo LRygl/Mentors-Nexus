@@ -27,6 +27,7 @@ public class CourseCategory {
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
+    @JsonIgnore
     private Set<Course> courses = new HashSet<>();
 
     public CourseCategory() {

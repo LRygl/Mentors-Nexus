@@ -1,8 +1,7 @@
 package com.mentors.NexusApplication.Resource;
 
 import com.mentors.NexusApplication.Exceptions.CourseCategoryNotFoundException;
-import com.mentors.NexusApplication.Exceptions.CourseNotFoundException;
-import com.mentors.NexusApplication.Model.Course;
+import com.mentors.NexusApplication.Exceptions.ResourceNotFoundException;
 import com.mentors.NexusApplication.Model.CourseCategory;
 import com.mentors.NexusApplication.Service.CourseCategoryService;
 import org.springframework.http.HttpStatus;
@@ -59,6 +58,15 @@ public class CourseCategoryResource {
     public ResponseEntity<CourseCategory> activateCourseCategory(@PathVariable(value = "id") Long courseCategoryId){
         //TODO - MAke
         return null;
+    }
+    @PutMapping(path = "/{courseCategoryId}/add/{courseId}")
+    public ResponseEntity<CourseCategory> addCourseCagoryToCourse(
+            @PathVariable(value = "courseId") Long courseId,
+            @PathVariable(value = "courseCategoryId"
+            ) Long courseCategoryId) throws ResourceNotFoundException {
+        CourseCategory courseCategory1 = courseCategoryService.addCourseCagoryToCourse(courseId,courseCategoryId);
+        return new ResponseEntity<>(courseCategory1,HttpStatus.OK);
+
     }
 
     @DeleteMapping(path = "/{id}/delete")

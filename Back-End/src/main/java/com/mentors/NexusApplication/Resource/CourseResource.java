@@ -1,6 +1,7 @@
 package com.mentors.NexusApplication.Resource;
 
 import com.mentors.NexusApplication.Exceptions.CourseNotFoundException;
+import com.mentors.NexusApplication.Exceptions.ResourceNotFoundException;
 import com.mentors.NexusApplication.Model.Course;
 import com.mentors.NexusApplication.Model.HttpResponse;
 import com.mentors.NexusApplication.Model.User;
@@ -36,6 +37,27 @@ public class CourseResource {
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
+    @GetMapping(path = "/filterList")
+    public ResponseEntity<List<Course>> findByFilterParams(
+            @RequestParam(value = "categoryId", required = false) Long courseCategoryId,
+            @RequestParam(value = "userId", required = false) Long userId
+    ) throws ResourceNotFoundException {
+
+        List<Course> filteredCourses = courseService.getAllFilteredCourses(courseCategoryId,userId);
+        return null;
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<Course>> findByCourseCategoryId(@RequestParam(value = "categoryId", required = false)Long courseCategoryId) throws ResourceNotFoundException {
+        List<Course> courseCategories =  courseService.getAllCoursesByCategoryId(courseCategoryId);
+        return new ResponseEntity<>(courseCategories, HttpStatus.OK);
+    }
+
+    @GetMapping("/listByUser")
+    public ResponseEntity<List<Course>> getAllCoursesByUserId(@RequestParam(value = "userId", required = false) Long userId) throws ResourceNotFoundException {
+        return new ResponseEntity<>(courseService.getAllCoursesByUserId(userId),HttpStatus.OK);
+    }
+
     @GetMapping(path = "/list/published")
     public ResponseEntity<List<Course>> getAllPublishedCourses(){
         List<Course> courses = courseService.getAllPublishedCourses();
@@ -48,16 +70,12 @@ public class CourseResource {
         return null;
     }
 
-/*    @GetMapping("/list/user/{id}")
-    public ResponseEntity<List<Course>> getAllCoursesByUserId(@PathVariable(value = "id",name = "id") Long userId){
-        return new ResponseEntity<>(courseService.getAllCoursesByUserId(userId),HttpStatus.OK);
-    }*/
+
     @GetMapping(path = "/{id}")
     public ResponseEntity<Course> getCourseByCourseId(@PathVariable(value = "id",name = "id") Long id) throws CourseNotFoundException {
         Course course = courseService.findCourseById(id);
         return new ResponseEntity<>(course,HttpStatus.OK);
     }
-
 
     @PostMapping("/add")
     public ResponseEntity<Course> addNewCourse(

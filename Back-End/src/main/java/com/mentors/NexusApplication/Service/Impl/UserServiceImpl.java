@@ -198,7 +198,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         saveProfileImage(currentUser, profileImage);
         return currentUser;
     }
-
+    //TODO Check if course is published
     public User enrollUserToCourse(Long courseId, Long userId) throws ResourceNotFoundException {
         Course course = courseRepository.findCourseById(courseId);
         //User user = userRepository.findUserById(userId);

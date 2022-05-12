@@ -1,10 +1,10 @@
 package com.mentors.NexusApplication.Service.Impl;
 
 import com.mentors.NexusApplication.Exceptions.CourseCategoryNotFoundException;
-import com.mentors.NexusApplication.Exceptions.CourseNotFoundException;
-import com.mentors.NexusApplication.Model.Course;
+import com.mentors.NexusApplication.Exceptions.ResourceNotFoundException;
 import com.mentors.NexusApplication.Model.CourseCategory;
 import com.mentors.NexusApplication.Repository.CourseCategoryRepository;
+import com.mentors.NexusApplication.Repository.CourseRepository;
 import com.mentors.NexusApplication.Service.CourseCategoryService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,11 @@ import java.util.List;
 public class CourseCategoryServiceImpl implements CourseCategoryService {
 
     private final CourseCategoryRepository courseCategoryRepository;
+    private final CourseRepository courseRepository;
 
-    public CourseCategoryServiceImpl(CourseCategoryRepository courseCategoryRepository) {
+    public CourseCategoryServiceImpl(CourseCategoryRepository courseCategoryRepository, CourseRepository courseRepository) {
         this.courseCategoryRepository = courseCategoryRepository;
+        this.courseRepository = courseRepository;
     }
 
     public CourseCategory findCourseCategoryById(Long id){
@@ -30,6 +32,8 @@ public class CourseCategoryServiceImpl implements CourseCategoryService {
 
     @Override
     public List<CourseCategory> getAllCourseCategories(){ return courseCategoryRepository.findAll(); }
+
+
 
     public CourseCategory addNewCourseCategory(String courseCategoryName, String courseCategoryDescription,String courseCategoryCode, Boolean courseCategoryIsActive){
         CourseCategory courseCategory = new CourseCategory();
@@ -44,9 +48,7 @@ public class CourseCategoryServiceImpl implements CourseCategoryService {
         return courseCategory;
     }
 
-    public CourseCategory addCourseCagoryToCourse(Long CourseId){
-        return null;
-    };
+
 
     public CourseCategory updateCourseCategory(Long id, String courseCategoryName, String courseCategoryDescription, Boolean courseCategoryActive) throws CourseCategoryNotFoundException {
         CourseCategory courseCategory = validateIfCourseCategoryExistsById(id);
@@ -57,6 +59,17 @@ public class CourseCategoryServiceImpl implements CourseCategoryService {
 
         courseCategory.setCourseCategoryUpdatedDate(new Date());
         return courseCategory;
+    }
+    //TODO Optimize
+    @Override
+    public CourseCategory addCourseCagoryToCourse(Long courseId, Long courseCategoryId) throws ResourceNotFoundException {
+        CourseCategory courseCategory = courseCategoryRepository.findById(courseCategoryId).orElseThrow(()->new ResourceNotFoundException("not found"));
+        return courseRepository.findById(courseId).map(
+                course -> {
+                    courseCategory.addCourseCategory(course);
+                    return courseCategoryRepository.save(courseCategory);
+                }
+        ).orElseThrow(()->new ResourceNotFoundException("Not found"));
     }
 
     public void deleteCourseCategoryById(Long id){
