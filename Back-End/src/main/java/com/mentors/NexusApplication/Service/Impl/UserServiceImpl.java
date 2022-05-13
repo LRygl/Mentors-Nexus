@@ -40,6 +40,7 @@ import java.util.List;
 
 import static com.mentors.NexusApplication.Constants.FileConstant.*;
 import static com.mentors.NexusApplication.Constants.UserImplementationConstant.*;
+import static com.mentors.NexusApplication.Enum.Role.ROLE_SUPER_ADMIN;
 import static com.mentors.NexusApplication.Enum.Role.ROLE_USER;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -166,7 +167,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = new User();
         String password = generateUserPassword();
         String encodedPassword = encodePassword(password);
-        //user.setUserId(generateUserId());
         user.setUserFirstName(firstName);
         user.setUserLastName(lastName);
         user.setUserJoinDate(new Date());
@@ -181,6 +181,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.save(user);
         saveProfileImage(user, profileImage);
         return user;
+    }
+
+    @Override
+    public void addAdminUser(String firstName, String lastName, String username, String email) {
+        User user = new User();
+        String encodedPassword = encodePassword("admin");
+        user.setUserFirstName(firstName);
+        user.setUserLastName(lastName);
+        user.setUserJoinDate(new Date());
+        user.setUsername(username);
+        user.setUserEmail(email);
+        user.setUserPassword(encodedPassword);
+        user.setActive(true);
+        user.setNotLocked(true);
+        user.setUserRole(getRoleEnumName("ROLE_SUPER_ADMIN").name());
+        user.setUserAuthorities(getRoleEnumName("ROLE_SUPER_ADMIN").getAuthorities());
+        //user.setUserProfileImageUrl(getTemporaryProfileImageUrl(username));
+        userRepository.save(user);
     }
 
     @Override
@@ -264,6 +282,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     }
 
+    public void changeUserPassword(String currentPassword,String newPassword, Long userId) throws PasswordResetException {
+        User user = userRepository.findUserById(userId);
+
+       if(passwordEncoder.matches(currentPassword,user.getUserPassword())){
+           user.setUserPassword(passwordEncoder.encode(newPassword));
+           userRepository.save(user);
+       } else {
+           throw new PasswordResetException("Passwords do not match");
+       }
+
+    }
+
     @Override
     public User updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException {
 
@@ -293,10 +323,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private Role getRoleEnumName(String role) {
         return Role.valueOf(role.toUpperCase());
-    }
-
-    private String generateUserId(){
-        return RandomStringUtils.randomNumeric(10);
     }
 
     private String generatePassword(){

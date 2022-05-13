@@ -94,6 +94,15 @@ public class UserResource {
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
 
+    @PutMapping("/{id}/updatePassword")
+    public ResponseEntity<String> updateUserPassword(
+            @RequestParam("currentPassword") String currentPassword,
+            @RequestParam("newPassword") String newPassword,
+            @PathVariable("id") Long userId) throws PasswordResetException {
+        userService.changeUserPassword(currentPassword, newPassword, userId);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpResponse> deleteUserById(@PathVariable("id") Long id) throws UserNotFoundException {
         return ResponseEntity.ok(

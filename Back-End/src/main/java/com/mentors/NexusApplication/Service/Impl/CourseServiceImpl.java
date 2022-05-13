@@ -10,6 +10,7 @@ import com.mentors.NexusApplication.Service.CourseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -21,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.mentors.NexusApplication.Constants.FileConstant.COURSE_FOLDER;
@@ -48,7 +50,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> getAllCoursesByCategoryId(long courseCategoryId) throws ResourceNotFoundException {
        if(!courseCategoryRepository.existsById(courseCategoryId)){
-           throw new ResourceNotFoundException("Not found");
+           throw new ResourceNotFoundException("Course category with ID:" + courseCategoryId + " was not found!");
        }
        return courseRepository.findByCourseCategoryId(courseCategoryId);
     }
@@ -56,21 +58,14 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> getAllCoursesByUserId(Long userId) throws ResourceNotFoundException {
         if(!userRepository.existsById(userId)){
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("User with User Id:" + userId + " was not found!");
         }
         return courseRepository.findCoursesByEnrolledUsersId(userId);
     }
-//TODO Resolve how to pass optional values for Ids
+
+    //TODO Resolve how to pass optional values for Ids
     @Override
     public List<Course> getAllFilteredCourses(Long courseCategoryId, Long userId) throws ResourceNotFoundException {
-        if(!courseCategoryRepository.existsById(courseCategoryId) || !userRepository.existsById(userId)){
-            throw new ResourceNotFoundException("User or Category not found");
-        }
-
-        if(courseCategoryId==null && userId==null){
-            return courseRepository.findAll();
-        }
-
         return null;
     }
 
