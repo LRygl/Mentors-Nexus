@@ -9,6 +9,7 @@ import com.mentors.NexusApplication.Service.UserService;
 import com.mentors.NexusApplication.Utils.JwtTokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +31,9 @@ import static com.mentors.NexusApplication.Constants.SecurityConstant.JWT_TOKEN_
 public class UserResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private UserService userService;
-    private AuthenticationManager authenticationManager;
-    private JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public UserResource(UserService userService, AuthenticationManager authenticationManager,JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
@@ -49,6 +49,14 @@ public class UserResource {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @GetMapping("/pagingUsers")
+    public Page<User> userPaginationAndSorting(@RequestParam(value = "page",defaultValue = "0", required = false) Integer page,
+                                               @RequestParam(value = "pageSize", defaultValue = "10", required = false) Integer pageSize,
+                                               @RequestParam(value = "order",defaultValue = "ASC", required = false) String sortDirection,
+                                               @RequestParam(value = "sort", defaultValue = "id", required = false) String sortBy){
+        return userService.getUserPaginationAndSorting(page,pageSize,sortDirection,sortBy);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<User> addNewUser(@RequestParam("firstName") String firstName,
                                            @RequestParam("lastName") String lastName,
@@ -57,10 +65,19 @@ public class UserResource {
                                            @RequestParam("role") String role,
                                            @RequestParam("isActive") String isActive,
                                            @RequestParam("isNonLocked") String isNonLocked,
-                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException, EmailNotFoundException {
+                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException {
         User newUser = userService.addNewUser(firstName, lastName, username, email, role, Boolean.parseBoolean(isActive) ,Boolean.parseBoolean(isNonLocked), profileImage);
         LOGGER.debug("Returning all users");
         return new ResponseEntity<>(newUser, HttpStatus.OK);
+    }
+
+    @PostMapping("/{userId}/course/{courseId}")
+    public ResponseEntity<User> enrollUserToCourse(
+            @PathVariable(value="courseId") Long courseId,
+            @PathVariable(value="userId") Long userId) throws ResourceNotFoundException {
+        User course = userService.enrollUserToCourse(courseId,userId);
+
+        return new ResponseEntity<>(course,HttpStatus.OK);
     }
 
     @PutMapping("/update")
@@ -72,9 +89,18 @@ public class UserResource {
                                        @RequestParam("role") String role,
                                        @RequestParam("isActive") String isActive,
                                        @RequestParam("isNonLocked") String isNonLocked,
-                                       @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException, EmailNotFoundException {
+                                       @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException {
         User updateUser = userService.updateUser(currentUsername, firstName, lastName, username, email, role, Boolean.parseBoolean(isActive) ,Boolean.parseBoolean(isNonLocked), profileImage);
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/updatePassword")
+    public ResponseEntity<String> updateUserPassword(
+            @RequestParam("currentPassword") String currentPassword,
+            @RequestParam("newPassword") String newPassword,
+            @PathVariable("id") Long userId) throws PasswordResetException {
+        userService.changeUserPassword(currentPassword, newPassword, userId);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -90,6 +116,16 @@ public class UserResource {
                         .httpStatusReason("test")
                         .build()
         );
+    }
+
+    @DeleteMapping("/{userId}/course/{courseId}")
+    public ResponseEntity<User> removeUserFromCourse(
+            @PathVariable(value="courseId") Long courseId,
+            @PathVariable(value="userId") Long userId)
+    {
+        User course = userService.removeUserFromCourse(courseId,userId);
+
+        return new ResponseEntity<>(course,HttpStatus.OK);
     }
 
     @PostMapping("/register")

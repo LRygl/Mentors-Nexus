@@ -43,6 +43,21 @@ public class ExceptionHandling implements ErrorController {
         );
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<HttpResponse> ResourceNotFoundException(){
+        return createHttpResponse(HttpStatus.NOT_FOUND,"RESOURCE WAS NOT FOUND");
+    }
+
+    @ExceptionHandler(CourseCategoryNotFoundException.class)
+    public ResponseEntity<HttpResponse> CourseCategoryNotFoundException(){
+        return createHttpResponse(HttpStatus.NOT_FOUND,"COURSE CATEGORY WAS NOT FOUND");
+    }
+
+    @ExceptionHandler(CourseNotFoundException.class)
+    public ResponseEntity<HttpResponse> CourseNotFoundException(){
+        return createHttpResponse(HttpStatus.NOT_FOUND,"COURSE WAS NOT FOUND");
+    }
+
     @ExceptionHandler(PasswordResetException.class)
     public ResponseEntity<HttpResponse> passwordResetException(){
         return createHttpResponse(HttpStatus.BAD_REQUEST,PASSWORD_RESET_NOT_POSSIBLE_NO_MATCH);

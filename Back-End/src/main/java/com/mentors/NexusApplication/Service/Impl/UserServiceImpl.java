@@ -1,30 +1,33 @@
 package com.mentors.NexusApplication.Service.Impl;
 
-import com.mentors.NexusApplication.Constants.UserImplementationConstant;
 import com.mentors.NexusApplication.Enum.Role;
 import com.mentors.NexusApplication.Exceptions.*;
+import com.mentors.NexusApplication.Model.Course;
 import com.mentors.NexusApplication.Model.User;
 import com.mentors.NexusApplication.Model.UserPrincipal;
+import com.mentors.NexusApplication.Repository.CourseRepository;
 import com.mentors.NexusApplication.Repository.UserRepository;
 import com.mentors.NexusApplication.Service.EmailService;
 import com.mentors.NexusApplication.Service.LoginAttemptService;
 import com.mentors.NexusApplication.Service.UserService;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
-
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
@@ -37,6 +40,7 @@ import java.util.List;
 
 import static com.mentors.NexusApplication.Constants.FileConstant.*;
 import static com.mentors.NexusApplication.Constants.UserImplementationConstant.*;
+import static com.mentors.NexusApplication.Enum.Role.ROLE_SUPER_ADMIN;
 import static com.mentors.NexusApplication.Enum.Role.ROLE_USER;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
@@ -47,14 +51,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private UserRepository userRepository;
-    private LoginAttemptService loginAttemptService;
-    private BCryptPasswordEncoder passwordEncoder;
-    private EmailService emailService;
+    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
+    private final LoginAttemptService loginAttemptService;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,BCryptPasswordEncoder passwordEncoder,LoginAttemptService loginAttemptService,EmailService emailService) {
+    public UserServiceImpl(UserRepository userRepository,CourseRepository courseRepository,BCryptPasswordEncoder passwordEncoder,LoginAttemptService loginAttemptService,EmailService emailService) {
         this.userRepository = userRepository;
+        this.courseRepository = courseRepository;
         this.loginAttemptService = loginAttemptService;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
@@ -63,6 +69,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public List<User> getUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Page<User> getUserPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortDirection, String sortBy){
+        Sort sort = Sort.by(getSortDirection(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(pageNumber,pageSize,sort);
+        return userRepository.findAll(pageable);
+    }
+
+    private Sort.Direction getSortDirection(String sortDirection){
+        if(sortDirection.equals("desc")){
+            return Sort.Direction.DESC;
+        }
+        return Sort.Direction.ASC;
     }
 
     public User findUserById(Long id){
@@ -147,7 +167,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = new User();
         String password = generateUserPassword();
         String encodedPassword = encodePassword(password);
-        //user.setUserId(generateUserId());
         user.setUserFirstName(firstName);
         user.setUserLastName(lastName);
         user.setUserJoinDate(new Date());
@@ -165,6 +184,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public void addAdminUser(String firstName, String lastName, String username, String email) {
+        User user = new User();
+        String encodedPassword = encodePassword("admin");
+        user.setUserFirstName(firstName);
+        user.setUserLastName(lastName);
+        user.setUserJoinDate(new Date());
+        user.setUsername(username);
+        user.setUserEmail(email);
+        user.setUserPassword(encodedPassword);
+        user.setActive(true);
+        user.setNotLocked(true);
+        user.setUserRole(getRoleEnumName("ROLE_SUPER_ADMIN").name());
+        user.setUserAuthorities(getRoleEnumName("ROLE_SUPER_ADMIN").getAuthorities());
+        //user.setUserProfileImageUrl(getTemporaryProfileImageUrl(username));
+        userRepository.save(user);
+    }
+
+    @Override
     public User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, EmailExistsException, UsernameExistsException, IOException {
         User currentUser = validateNewUsernameAndEmail(currentUsername, newUsername, newEmail);
         currentUser.setUserFirstName(newFirstName);
@@ -179,8 +216,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         saveProfileImage(currentUser, profileImage);
         return currentUser;
     }
+    //TODO Check if course is published
+    public User enrollUserToCourse(Long courseId, Long userId) throws ResourceNotFoundException {
+        Course course = courseRepository.findCourseById(courseId);
+        //User user = userRepository.findUserById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Not found"));
+        user.addUserToCourse(course);
 
-    private User validateNewUsernameAndEmail(String currentUserName, String newUserName, String userEmail) throws EmailExistsException, UsernameExistsException, UserNotFoundException {
+        return userRepository.save(user);
+    }
+
+    public User removeUserFromCourse(Long courseId, Long userId) {
+        Course course = courseRepository.findCourseById(courseId);
+        User user = userRepository.findUserById(userId);
+        user.removeUserFromCourse(course);
+
+        return userRepository.save(user);
+    }
+
+
+    private @Nullable User validateNewUsernameAndEmail(String currentUserName, String newUserName, String userEmail) throws EmailExistsException, UsernameExistsException, UserNotFoundException {
         User userByNewUsername = findUserByUsername(newUserName);
         User userByNewEmail = findUserByEmail(userEmail);
 
@@ -207,7 +262,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return null;
         }
     }
-
     private String generateUserPassword(){
         return RandomStringUtils.randomAlphanumeric(10);
     }
@@ -225,6 +279,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             emailService.sendNewPasswordEmail(user.getUserFirstName(),password,user.getUserEmail());
         }
         throw new PasswordResetException("MESSAGE PASSWORD RESET NOT POSSIBLE");
+
+    }
+
+    public void changeUserPassword(String currentPassword,String newPassword, Long userId) throws PasswordResetException {
+        User user = userRepository.findUserById(userId);
+
+       if(passwordEncoder.matches(currentPassword,user.getUserPassword())){
+           user.setUserPassword(passwordEncoder.encode(newPassword));
+           userRepository.save(user);
+       } else {
+           throw new PasswordResetException("Passwords do not match");
+       }
 
     }
 
@@ -257,10 +323,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private Role getRoleEnumName(String role) {
         return Role.valueOf(role.toUpperCase());
-    }
-
-    private String generateUserId(){
-        return RandomStringUtils.randomNumeric(10);
     }
 
     private String generatePassword(){

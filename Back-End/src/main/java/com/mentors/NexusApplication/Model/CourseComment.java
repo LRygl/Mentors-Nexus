@@ -1,5 +1,4 @@
 package com.mentors.NexusApplication.Model;
 
-public class Lesson {
-
+public class CourseComment {
 }

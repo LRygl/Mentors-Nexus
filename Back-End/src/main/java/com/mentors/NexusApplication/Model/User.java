@@ -1,18 +1,21 @@
 package com.mentors.NexusApplication.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name="application_users")
+@Table(name="APPLICATION_USERS")
 public class User {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userGenerator")
+    @SequenceGenerator(name = "userGenerator", sequenceName = "application_user_sequence", allocationSize = 10)
     @Column(nullable = false,updatable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
     private String userFirstName;
     private String userLastName;
@@ -29,11 +32,44 @@ public class User {
     private Date userLastLoginDateDisplay;
     private Date userJoinDate;
     private Date userLastUpdatedDate;
-
     private Boolean isActive;
     private Boolean isNotLocked;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "USER_COURSE",
+            joinColumns = { @JoinColumn(name = "tutorial_id") },
+            inverseJoinColumns = { @JoinColumn(name = "tag_id") })
+    private Set<Course> enrolledCourses = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "courseCategory")
+    private Set<Course> ownedCourses = new HashSet<>();
 
     public User() {
+    }
+
+    public User(Long id, String userFirstName, String userLastName, String username, String userPassword, String userEmail, String userCompany, String userProfileImageUrl, String userRole, String[] userAuthorities, Date userLastLoginDate, Date userLastLoginDateDisplay, Date userJoinDate, Date userLastUpdatedDate, Boolean isActive, Boolean isNotLocked, Set<Course> enrolledCourses, Set<Course> ownedCourses) {
+        this.id = id;
+        this.userFirstName = userFirstName;
+        this.userLastName = userLastName;
+        this.username = username;
+        this.userPassword = userPassword;
+        this.userEmail = userEmail;
+        this.userCompany = userCompany;
+        this.userProfileImageUrl = userProfileImageUrl;
+        this.userRole = userRole;
+        this.userAuthorities = userAuthorities;
+        this.userLastLoginDate = userLastLoginDate;
+        this.userLastLoginDateDisplay = userLastLoginDateDisplay;
+        this.userJoinDate = userJoinDate;
+        this.userLastUpdatedDate = userLastUpdatedDate;
+        this.isActive = isActive;
+        this.isNotLocked = isNotLocked;
+        this.enrolledCourses = enrolledCourses;
+        this.ownedCourses = ownedCourses;
     }
 
     public Long getId() {
@@ -164,22 +200,30 @@ public class User {
         isNotLocked = notLocked;
     }
 
-    public User(Long id, String userFirstName, String userLastName, String username, String userPassword, String userEmail, String userCompany, String userProfileImageUrl, String userRole, String[] userAuthorities, Date userLastLoginDate, Date userLastLoginDateDisplay, Date userJoinDate, Date userLastUpdatedDate, Boolean isActive, Boolean isNotLocked) {
-        this.id = id;
-        this.userFirstName = userFirstName;
-        this.userLastName = userLastName;
-        this.username = username;
-        this.userPassword = userPassword;
-        this.userEmail = userEmail;
-        this.userCompany = userCompany;
-        this.userProfileImageUrl = userProfileImageUrl;
-        this.userRole = userRole;
-        this.userAuthorities = userAuthorities;
-        this.userLastLoginDate = userLastLoginDate;
-        this.userLastLoginDateDisplay = userLastLoginDateDisplay;
-        this.userJoinDate = userJoinDate;
-        this.userLastUpdatedDate = userLastUpdatedDate;
-        this.isActive = isActive;
-        this.isNotLocked = isNotLocked;
+    public Set<Course> getEnrolledCourses() {
+        return enrolledCourses;
     }
+
+    public void setEnrolledCourses(Set<Course> enrolledCourses) {
+        this.enrolledCourses = enrolledCourses;
+    }
+
+    public Set<Course> getOwnedCourses() {
+        return ownedCourses;
+    }
+
+    public void setOwnedCourses(Set<Course> ownedCourses) {
+        this.ownedCourses = ownedCourses;
+    }
+
+    public void addUserToCourse(Course course){
+        this.enrolledCourses.add(course);
+        course.getEnrolledUsers().add(this);
+    }
+
+    public void removeUserFromCourse(Course course){
+        this.enrolledCourses.remove(course);
+        course.getEnrolledUsers().remove(this);
+    }
+
 }
