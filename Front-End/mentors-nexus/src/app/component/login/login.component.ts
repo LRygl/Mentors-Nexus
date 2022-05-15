@@ -6,7 +6,7 @@ import { HeaderType } from 'src/app/enum/header-type.enum';
 import { NotificationType } from 'src/app/enum/notification-type.enum';
 import { User } from 'src/app/model/user';
 import { AuthenticationService } from 'src/app/service/authentication.service';
-import { NotificationService } from 'src/app/service/notification.service';
+//import { NotificationService } from 'src/app/service/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
-    private notificationService: NotificationService ) { }
+ ) { }
 
   ngOnInit(): void {
     this.showLoading = false
@@ -40,7 +40,6 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.authenticationService.saveToken(token);
           this.authenticationService.addUserToLocalCache(response.body);
           this.router.navigateByUrl('/user/management');
-          this.notificationService.sendSuccessNotification("You were successfully logged in!")
           this.showLoading = false;
         },
         (httpErrorResponse: HttpErrorResponse) => {
@@ -52,9 +51,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   private sendErrorNotification(notificationType: NotificationType, message: string) {
     if (message) {
-      this.notificationService.notify(notificationType,message);
+      //this.notificationService.notify(notificationType,message);
     } else {
-      this.notificationService.notify(notificationType,'AN ERROR OCCURED');
+      //this.notificationService.notify(notificationType,'AN ERROR OCCURED');
     }
   }
 

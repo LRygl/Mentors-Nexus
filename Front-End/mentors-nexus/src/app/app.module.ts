@@ -10,7 +10,7 @@ import { UserService } from './service/user.service';
 
 import { FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
-import { LoginComponent } from './component/login/login/login.component';
+import { LoginComponent } from './component/login/login.component';
 import { UserComponent } from './component/user/user/user.component';
 
 
