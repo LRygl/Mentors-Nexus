@@ -14,20 +14,29 @@ import { LoginComponent } from './component/login/login.component';
 import { UserComponent } from './component/user/user.component';
 import { NotificationModule } from './notification.module';
 import { NotificationService } from './service/notification.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+import { FooterComponent } from './component/footer/footer.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    UserComponent
+    UserComponent,
+    FooterComponent
+  ],
+  exports: [
+    FooterComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    NotificationModule
+    NotificationModule,
+    NgbModule,
+    FontAwesomeModule
   ],
   providers: [
     AuthenticationService,

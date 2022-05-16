@@ -58,6 +58,18 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  public signUp() {
+      const container = document.getElementById('container');
+      container.classList.add('right-panel-active');
+  }
+
+  public signIn() {
+      const container = document.getElementById('container');
+      container.classList.remove('right-panel-active');
+  }
+
+
   ngOnDestroy(): void {
     this.subsciptions.forEach(sub => sub.unsubscribe());
   }
