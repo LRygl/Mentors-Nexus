@@ -11,8 +11,9 @@ import { UserService } from './service/user.service';
 import { FormsModule } from '@angular/forms';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { LoginComponent } from './component/login/login.component';
-import { UserComponent } from './component/user/user/user.component';
-
+import { UserComponent } from './component/user/user.component';
+import { NotificationModule } from './notification.module';
+import { NotificationService } from './service/notification.service';
 
 
 
@@ -25,12 +26,14 @@ import { UserComponent } from './component/user/user/user.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    NotificationModule
   ],
   providers: [
     AuthenticationService,
     UserService,
     AuthenticationGuard,
+    NotificationService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [
